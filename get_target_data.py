@@ -1,4 +1,4 @@
-## Binary classification: target track (1) or other music / noise (0)
+## Binary classification: target track (1) or other music / noise (0) ##
 
 
 ## Imports ##
@@ -38,13 +38,15 @@ with open(os.path.join(DATA_DIR, 'link_details.json'), 'r') as j:
 
 # Keep a record of the categories per sound bite
 ytid_data = {}
+cntr   = 0
+n_cats = len(link_details) 
 for cat, urls in link_details.items():
-    print('category: %s' % cat)
+    cntr += 1
+    print('category: %s (%d / %d)' % (cat, cntr, n_cats))
     for _, yt_id, _, _ in urls:
         # Skip this link if not in the YT8M_DIR
         wav_fpath = os.path.join(YT8M_DIR, 'yt8m_sound_%s.wav' % yt_id)
         if not os.path.isfile(wav_fpath):
-            print(yt_id)
             continue
         # Record the category and log-mel spectrogram for this file
         ytid_data[yt_id] = {}
@@ -58,6 +60,8 @@ with tf.Graph().as_default(), tf.Session() as sess:
 
   features_tensor   = sess.graph.get_tensor_by_name(vggish_params.INPUT_TENSOR_NAME)
   embedding_tensor  = sess.graph.get_tensor_by_name(vggish_params.OUTPUT_TENSOR_NAME)
+
+
   [embedding_batch] = sess.run([embedding_tensor], feed_dict={features_tensor: tgt_data_lmel})
 
 
