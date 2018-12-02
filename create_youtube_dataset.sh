@@ -19,3 +19,6 @@ echo "Number of files downloaded: $n_dls"
 # Clip the wav files to correct segment
 mkdir data/youtube_clip
 python3 clip_youtube_files.py
+
+# Clear out the originals, as they are probably quite large in sum
+rm data/youtube_orig/*.wav
