@@ -48,18 +48,34 @@ with open('data/non-target_categories.txt', 'r') as f:
 
 # Process each of the categories, writing and parsing the first URLs
 link_details = {}
-with open('data/dl_youtube_links.txt', 'w') as f: 
-
+n_cats  = 0
+n_links = 0
+link_fname = 'data/dl_youtube_links.txt'
+with open(link_fname, 'w') as f: 
+    print('Saving links to: %s' % link_fname)
     for cat in sound_cats:
         cat = cat.strip()
         f.write('# %s\n' % cat)
         my_cat_links = find_youtube_links(cat, ontology)[:N_TRACKS_PER_CAT]
+
+        # Verbose 
+        n_new_links = len(my_cat_links)
+        n_links += n_new_links
+        if n_new_links > 0:
+            n_cats += 1
+ 
         for url in my_cat_links:
             f.write(prepend_protocol(url))
             f.write('\n')
         
         link_details[cat] = [parse_youtube_url(url) for url in my_cat_links]
 
+
 # Save the parsed URLs to file
-with open('data/link_details.json', 'w') as j:
+link_detail_fname = 'data/link_details.json'
+print('Saving link details to: %s' % link_detail_fname)
+with open(link_detail_fname, 'w') as j:
      json.dump(link_details, j)
+
+print('Found %d links from %d non-empty categories' % (n_links, n_cats))
+print('')
