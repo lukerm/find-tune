@@ -29,9 +29,6 @@ YT8M_DIR = os.path.join(DATA_DIR, 'youtube_clip')
 
 ## Main ## 
 
-# Get embedding features for the target file
-tgt_data_lmel = vggish_input.wavfile_to_examples(os.path.join(DATA_DIR, 'target_tune.wav'))
-
 # Details for all the links
 with open(os.path.join(DATA_DIR, 'link_details.json'), 'r') as j:
     link_details = json.load(j)
@@ -53,17 +50,23 @@ for cat, urls in link_details.items():
         ytid_data[yt_id]['category'] = cat
         ytid_data[yt_id]['log_mel']  = vggish_input.wavfile_to_examples(wav_fpath)
 
-#
+# Make a record for the target track, too
+ytid_data['target'] = {}
+ytid_data['target']['category'] = 'target'
+ytid_data['target']['log_mel']  = vggish_input.wavfile_to_examples(os.path.join(DATA_DIR, 'target_tune.wav'))
+
+# Embedding features
 with tf.Graph().as_default(), tf.Session() as sess:
-  vggish_slim.define_vggish_slim()
-  vggish_slim.load_vggish_slim_checkpoint(sess, checkpoint_path)
+    # Instantiate the model
+    vggish_slim.define_vggish_slim()
+    vggish_slim.load_vggish_slim_checkpoint(sess, checkpoint_path)
+    features_tensor  = sess.graph.get_tensor_by_name(vggish_params.INPUT_TENSOR_NAME)
+    embedding_tensor = sess.graph.get_tensor_by_name(vggish_params.OUTPUT_TENSOR_NAME)
+    # Extract 128-D embedding features for the target track
+    [embedding_trgt] = sess.run([embedding_tensor], feed_dict={features_tensor: ytid_data['target']['log_mel']})
+    ytid_data['target']['embedding'] = embedding_trgt
+    ytid_data['target']['cat_list']  = [ytid_data['target']['category']] * len(embedding_trgt)
+    embedding_label  = ['target']* len(embedding_trgt)
 
-  features_tensor   = sess.graph.get_tensor_by_name(vggish_params.INPUT_TENSOR_NAME)
-  embedding_tensor  = sess.graph.get_tensor_by_name(vggish_params.OUTPUT_TENSOR_NAME)
 
 
-  [embedding_batch] = sess.run([embedding_tensor], feed_dict={features_tensor: tgt_data_lmel})
-
-
-print(embedding_batch)
-print(embedding_batch.shape)
