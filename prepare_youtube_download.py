@@ -12,6 +12,13 @@ N_TRACKS_PER_CAT = 2
 
 ## Functions ##
 
+def prepend_protocol(url):
+    if 'http' not in url:
+        return 'https://' + url
+    else:
+        return url
+
+
 def find_youtube_links(category, ontology):
     for o in ontology:
         if o['name'] == category.strip():
@@ -21,9 +28,7 @@ def find_youtube_links(category, ontology):
 
 
 def parse_youtube_url(url):
-    if 'http' not in url:
-        url = 'https://' + url
-
+    url   = prepend_protocol(url)
     yt_id = url.split('/')[3].split('?')[0]
     s_start = re.search('start=([0-9]+)', url).group(1)
     s_end = re.search('end=([0-9]+)', url).group(1)
@@ -50,7 +55,7 @@ with open('data/dl_youtube_links.txt', 'w') as f:
         f.write('# %s\n' % cat)
         my_cat_links = find_youtube_links(cat, ontology)[:N_TRACKS_PER_CAT]
         for url in my_cat_links:
-            f.write(url) 
+            f.write(prepend_protocol(url))
             f.write('\n')
         
         link_details[cat] = [parse_youtube_url(url) for url in my_cat_links]
