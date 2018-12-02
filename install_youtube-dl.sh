@@ -1,3 +1,6 @@
+# youtube-dl is a lightweight program that facilitates downloading YouTube audio clips from command line
+# Documentation: https://github.com/rg3/youtube-dl/blob/master/README.md#readme
+
 # Install 
 sudo curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl
 sudo chmod a+rx /usr/local/bin/youtube-dl
