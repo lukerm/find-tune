@@ -1,0 +1,7 @@
+*.wav
+!data/target_tune.wav
+*.json
+!data/ontology.json
+*.txt
+!data/non-target_categories.txt
+*.csv
