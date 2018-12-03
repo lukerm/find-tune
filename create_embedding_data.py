@@ -79,6 +79,8 @@ X = np.ndarray((0, ytid_data['target']['embedding'].shape[-1]))
 y = []
 c = []
 
+# We can use this method because the data is small and runs quickly
+# Otherwise, you should pre-assign a matrix of correct size and use pointers
 for k, v in ytid_data.items():
     X  = np.concatenate([X, v['embedding']], axis=0)
     y += v['labels']
