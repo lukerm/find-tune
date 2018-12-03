@@ -22,3 +22,8 @@ python3 clip_youtube_files.py
 
 # Clear out the originals, as they are probably quite large in sum
 rm data/youtube_orig/*.wav
+
+# Use the VGGish model to extract 128-D feature embeddings for each clipped track
+# Note: this does not perform the post-processing steps cited here:
+# https://github.com/tensorflow/models/blob/master/research/audioset/vggish_postprocess.py
+python3 create_embedding_data.py
