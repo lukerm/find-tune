@@ -12,6 +12,8 @@ import vggish_input
 import vggish_params
 import vggish_slim
 
+import numpy as np
+
 
 ## Constants ## 
 
@@ -72,3 +74,23 @@ with tf.Graph().as_default(), tf.Session() as sess:
         ytid_data[yt_id]['cat_list']  = [ytid_data[yt_id]['category']] * len(my_embedding)
         ytid_data[yt_id]['labels']    = [1 if yt_id == 'target' else 0]* len(my_embedding)
 
+# Stack embeddings (X) & labels (y) & categories (c)
+X = np.ndarray((0, ytid_data['target']['embedding'].shape[-1]))
+y = []
+c = []
+
+for k, v in ytid_data.items():
+    X  = np.concatenate([X, v['embedding']], axis=0)
+    y += v['labels']
+    c += v['cat_list']
+
+assert len(X) == len(y)
+assert len(X) == len(c)
+
+# Convert to arrays
+y = np.array(y)
+c = np.array(c)
+
+
+# Save to data file
+np.savez(os.path.join(DATA_DIR, 'embedding_data.npz'), X, y, c)
