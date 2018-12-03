@@ -17,10 +17,9 @@ import numpy as np
 
 ## Constants ## 
 
-user_root = '/'.join(os.getcwd().split('/')[:3])
 # Paths to downloaded VGGish files
 # TODO: fix path
-VGGISH_DIR= os.path.join(user_root, 'tf-models','research','audioset')
+VGGISH_DIR= os.path.join(os.path.expanduser('~'), 'tf-models','research','audioset')
 checkpoint_path = os.path.join(VGGISH_DIR, 'vggish_model.ckpt')
 pca_params_path = os.path.join(VGGISH_DIR, 'vggish_pca_params.npz')
 
