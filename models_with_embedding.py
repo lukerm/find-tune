@@ -13,6 +13,8 @@ import numpy as np
 np.random.seed(2018)
 
 from imblearn.over_sampling import SMOTE
+from sklearn.preprocessing  import StandardScaler
+
 
 ## Constants ##
 
@@ -64,3 +66,8 @@ X_tr_bal, y_tr_bal = sm.fit_sample(X_tr, y_tr)
 
 print('Positive labels in balanced training set: %d' % y_tr_bal.sum())
 print('Negative labels in balanced training set: %d' % (y_tr_bal==0).sum())
+
+# Centre and scale the features
+ss = StandardScaler()
+X_tr_bal = ss.fit_transform(X_tr_bal)
+X_va = ss.transform(X_va)
