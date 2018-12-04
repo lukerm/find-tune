@@ -38,8 +38,8 @@ print('P(X < 3) = %.3f (where X ~ Bin(N, p))' % np.mean(np.random.binomial(N, p,
 i_pos = np.where(y == 1)[0]
 i_neg = np.where(y == 0)[0]
 
-i_pos_tr = np.random.choice(i_pos, size=5, replace=False) # Training
-i_pos_va = np.array(list(set(i_pos) - set(i_pos_tr)))     # compliment for validation
+i_pos_va = np.random.choice(i_pos, size=5, replace=False) # 5 for validation
+i_pos_tr = np.array(list(set(i_pos) - set(i_pos_va)))     # compliment for training
 
 i_neg_tr = np.random.choice(i_neg, size=len(X)-N, replace=False) # Training
 i_neg_va = np.array(list(set(i_neg) - set(i_neg_tr)))            # Validation
@@ -54,5 +54,6 @@ y_va = y[np.append(i_neg_va, i_pos_va)]
 print('Positive labels in training set:   %d' % y_tr.sum())
 print('Positive labels in validation set: %d' % y_va.sum())
 
-print('Negative labels in training set:   %d' % (~y_tr.astype(bool)).sum())
-print('Negative labels in validation set: %d' % (~y_tr.astype(bool)).sum())
+print('Negative labels in training set:   %d' % (y_tr==0).sum())
+print('Negative labels in validation set: %d' % (y_va==0).sum())
+
