@@ -15,6 +15,10 @@ np.random.seed(2018)
 from imblearn.over_sampling import SMOTE
 from sklearn.preprocessing  import StandardScaler
 
+from sklearn.metrics import accuracy_score, precision_recall_fscore_support
+from sklearn.linear_model import LogisticRegression
+
+
 
 ## Constants ##
 
@@ -71,3 +75,34 @@ print('Negative labels in balanced training set: %d' % (y_tr_bal==0).sum())
 ss = StandardScaler()
 X_tr_bal = ss.fit_transform(X_tr_bal)
 X_va = ss.transform(X_va)
+
+
+
+## Linear classifier ##
+
+# Fit multiple classifiers with increasing regularization strength
+# Print a report card for each model
+for alpha in np.logspace(-5, 0, 6):
+    print('alpha = %.e' % alpha)
+    lr = LogisticRegression(C=1/alpha, solver='liblinear')
+    lr.fit(X_tr_bal, y_tr_bal)
+    y_pred_tr = lr.predict(X_tr)
+    y_pred_va = lr.predict(X_va)
+
+    print('TRAIN:')
+    print('Accuracy: %.3f' % accuracy_score(y_tr, y_pred_tr))
+    p, r, f, s = precision_recall_fscore_support(y_tr, y_pred_tr, beta=1.)
+    print('precision: [%.3f, %.3f]' % (p[0], p[1]))
+    print('recall:    [%.3f, %.3f]' % (r[0], r[1]))
+    print('f_beta:    [%.3f, %.3f]' % (f[0], f[1]))
+    print('support:   [%.3f, %.3f]' % (s[0], s[1]))
+    print()
+    print('VALIDATION:')
+    print('Accuracy: %.3f' % accuracy_score(y_va, y_pred_va))
+    p, r, f, s = precision_recall_fscore_support(y_va, y_pred_va, beta=1.)
+    print('precision: [%.3f, %.3f]' % (p[0], p[1]))
+    print('recall:    [%.3f, %.3f]' % (r[0], r[1]))
+    print('f_beta:    [%.3f, %.3f]' % (f[0], f[1]))
+    print('support:   [%.3f, %.3f]' % (s[0], s[1]))
+    print()
+    print()
