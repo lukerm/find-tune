@@ -93,4 +93,4 @@ c = np.array(c)
 
 
 # Save to data file
-np.savez(os.path.join(DATA_DIR, 'embedding_data.npz'), X, y, c)
+np.savez(os.path.join(DATA_DIR, 'embedding_data.npz'), X=X, y=y, c=c)
