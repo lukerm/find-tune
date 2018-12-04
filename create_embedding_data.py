@@ -4,8 +4,7 @@
 ## Imports ##
 
 import os
-
-import soundfile as sf
+import json
 import tensorflow as tf
 
 import vggish_input
@@ -15,7 +14,7 @@ import vggish_slim
 import numpy as np
 
 
-## Constants ## 
+## Constants ##
 
 # Paths to downloaded VGGish files
 # TODO: fix path
@@ -28,7 +27,7 @@ DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
 YT8M_DIR = os.path.join(DATA_DIR, 'youtube_clip')
 
 
-## Main ## 
+## Main ##
 
 # Details for all the links
 with open(os.path.join(DATA_DIR, 'link_details.json'), 'r') as j:
@@ -37,7 +36,7 @@ with open(os.path.join(DATA_DIR, 'link_details.json'), 'r') as j:
 # Keep a record of the categories per sound bite
 ytid_data = {}
 cntr   = 0
-n_cats = len(link_details) 
+n_cats = len(link_details)
 for cat, urls in link_details.items():
     cntr += 1
     print('category: %s (%d / %d)' % (cat, cntr, n_cats))
