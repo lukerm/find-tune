@@ -12,6 +12,7 @@ import os
 import numpy as np
 np.random.seed(2018)
 
+from imblearn.over_sampling import SMOTE
 
 ## Constants ##
 
@@ -57,3 +58,9 @@ print('Positive labels in validation set: %d' % y_va.sum())
 print('Negative labels in training set:   %d' % (y_tr==0).sum())
 print('Negative labels in validation set: %d' % (y_va==0).sum())
 
+# As this is quite an imbalanced problem, we'll use SMOTE to over sample the positive class
+sm = SMOTE(random_state=2018)
+X_tr_bal, y_tr_bal = sm.fit_sample(X_tr, y_tr)
+
+print('Positive labels in balanced training set: %d' % y_tr_bal.sum())
+print('Negative labels in balanced training set: %d' % (y_tr_bal==0).sum())
