@@ -5,6 +5,7 @@
 
 import os
 import json
+import pickle
 import tensorflow as tf
 
 import vggish_input
@@ -103,3 +104,5 @@ i = np.array(i)
 
 # Save to data file
 np.savez(os.path.join(DATA_DIR, 'embedding_data.npz'), X=X, y=y, c=c, s=s, i=i)
+with open(os.path.join(DATA_DIR, 'yt_clips_dict.pkl'), 'wb') as f:
+    pickle.dump(ytid_data, f)
