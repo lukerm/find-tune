@@ -82,13 +82,21 @@ X_va = ss.transform(X_va)
 
 # Fit multiple classifiers with increasing regularization strength
 # Print a report card for each model
-for alpha in np.logspace(-5, 0, 6):
+for alpha in np.logspace(0, -5, 6):
     print('alpha = %.e' % alpha)
     lr = LogisticRegression(C=1/alpha, solver='liblinear')
     lr.fit(X_tr_bal, y_tr_bal)
+    y_pred_tr_bal = lr.predict(X_tr_bal)
     y_pred_tr = lr.predict(X_tr)
     y_pred_va = lr.predict(X_va)
 
+    print('TRAIN (BAL.):')
+    print('Accuracy: %.3f' % accuracy_score(y_tr_bal, y_pred_tr_bal))
+    p, r, f, s = precision_recall_fscore_support(y_tr_bal, y_pred_tr_bal, beta=1.)
+    print('precision: [%.3f, %.3f]' % (p[0], p[1]))
+    print('recall:    [%.3f, %.3f]' % (r[0], r[1]))
+    print('f_beta:    [%.3f, %.3f]' % (f[0], f[1]))
+    print('support:   [%.3f, %.3f]' % (s[0], s[1]))
     print('TRAIN:')
     print('Accuracy: %.3f' % accuracy_score(y_tr, y_pred_tr))
     p, r, f, s = precision_recall_fscore_support(y_tr, y_pred_tr, beta=1.)
