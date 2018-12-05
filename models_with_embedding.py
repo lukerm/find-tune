@@ -54,9 +54,11 @@ i_neg_va = np.array(list(set(i_neg) - set(i_neg_tr)))            # Validation
 # Create split datasets
 X_tr = X[np.append(i_neg_tr, i_pos_tr), :]
 y_tr = y[np.append(i_neg_tr, i_pos_tr)]
+c_tr = c[np.append(i_neg_tr, i_pos_tr)]
 
 X_va = X[np.append(i_neg_va, i_pos_va), :]
 y_va = y[np.append(i_neg_va, i_pos_va)]
+c_va = c[np.append(i_neg_va, i_pos_va)]
 
 print('Positive labels in training set:   %d' % y_tr.sum())
 print('Positive labels in validation set: %d' % y_va.sum())
@@ -114,3 +116,12 @@ for alpha in np.logspace(0, -5, 6):
     print('support:   [%.3f, %.3f]' % (s[0], s[1]))
     print()
     print()
+
+
+# Check category of the missclassified (false positives) - are they musical?
+tp = np.where((y_pred_va == 1) & (y_va == 1))[0]
+fp = np.where((y_pred_va == 1) & (y_va == 0))[0]
+print('Number of true positives (validation):  %d' % len(tp))
+print(c_va[tp])
+print('Number of false positives (validation): %d' % len(fp))
+print(c_va[fp])
