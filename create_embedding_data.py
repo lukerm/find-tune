@@ -71,11 +71,15 @@ with tf.Graph().as_default(), tf.Session() as sess:
         ytid_data[yt_id]['embedding'] = my_embedding
         ytid_data[yt_id]['cat_list']  = [ytid_data[yt_id]['category']] * len(my_embedding)
         ytid_data[yt_id]['labels']    = [1 if yt_id == 'target' else 0]* len(my_embedding)
+        ytid_data[yt_id]['n_sec']     = list(range(1, len(my_embedding)+1))
+        ytid_data[yt_id]['ytid']      = [yt_id] * len(my_embedding)
 
-# Stack embeddings (X) & labels (y) & categories (c)
+# Stack embeddings (X), labels (y), categories (c), number of seconds (s) & ids (i)
 X = np.ndarray((0, ytid_data['target']['embedding'].shape[-1]))
 y = []
 c = []
+s = []
+i = []
 
 # We can use this method because the data is small and runs quickly
 # Otherwise, you should pre-assign a matrix of correct size and use pointers
@@ -83,14 +87,19 @@ for k, v in ytid_data.items():
     X  = np.concatenate([X, v['embedding']], axis=0)
     y += v['labels']
     c += v['cat_list']
+    s += v['n_sec']
+    i += v['ytid']
 
 assert len(X) == len(y)
 assert len(X) == len(c)
+assert len(X) == len(s)
+assert len(X) == len(i)
 
 # Convert to arrays
 y = np.array(y)
 c = np.array(c)
-
+s = np.array(s)
+i = np.array(i)
 
 # Save to data file
-np.savez(os.path.join(DATA_DIR, 'embedding_data.npz'), X=X, y=y, c=c)
+np.savez(os.path.join(DATA_DIR, 'embedding_data.npz'), X=X, y=y, c=c, s=s, i=i)
