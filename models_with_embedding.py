@@ -29,7 +29,7 @@ DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
 
 # Load data from file
 data = np.load(os.path.join(DATA_DIR, 'embedding_data.npz'))
-X, y, c = data['X'], data['y'], data['c']
+X, y, c, s, ids = data['X'], data['y'], data['c'], data['s'], data['i']
 
 # Train (80%) / val (20%) split
 p = np.mean(y)
@@ -55,10 +55,14 @@ i_neg_va = np.array(list(set(i_neg) - set(i_neg_tr)))            # Validation
 X_tr = X[np.append(i_neg_tr, i_pos_tr), :]
 y_tr = y[np.append(i_neg_tr, i_pos_tr)]
 c_tr = c[np.append(i_neg_tr, i_pos_tr)]
+s_tr = s[np.append(i_neg_tr, i_pos_tr)]
+ids_tr = ids[np.append(i_neg_tr, i_pos_tr)]
 
 X_va = X[np.append(i_neg_va, i_pos_va), :]
 y_va = y[np.append(i_neg_va, i_pos_va)]
 c_va = c[np.append(i_neg_va, i_pos_va)]
+s_va = s[np.append(i_neg_va, i_pos_va)]
+ids_va = ids[np.append(i_neg_va, i_pos_va)]
 
 print('Positive labels in training set:   %d' % y_tr.sum())
 print('Positive labels in validation set: %d' % y_va.sum())
@@ -99,6 +103,7 @@ for alpha in np.logspace(0, -5, 6):
     print('recall:    [%.3f, %.3f]' % (r[0], r[1]))
     print('f_beta:    [%.3f, %.3f]' % (f[0], f[1]))
     print('support:   [%.3f, %.3f]' % (s[0], s[1]))
+    print()
     print('TRAIN:')
     print('Accuracy: %.3f' % accuracy_score(y_tr, y_pred_tr))
     p, r, f, s = precision_recall_fscore_support(y_tr, y_pred_tr, beta=1.)
