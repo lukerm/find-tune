@@ -130,3 +130,13 @@ print('Number of true positives (validation):  %d' % len(tp))
 print(c_va[tp])
 print('Number of false positives (validation): %d' % len(fp))
 print(c_va[fp])
+
+tp = np.where((y_pred_tr == 1) & (y_tr == 1))[0]
+fp = np.where((y_pred_tr == 1) & (y_tr == 0))[0]
+print('Number of true positives (train):  %d' % len(tp))
+print(c_tr[tp])
+print('Number of false positives (train): %d' % len(fp))
+print(c_tr[fp])
+
+for i, s, c in zip(ids_tr[fp], s_tr[fp], c_tr[fp]):
+    print('Video ID: %s (%ds due to %s)' % (i, s, c))
