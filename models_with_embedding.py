@@ -137,7 +137,7 @@ X_va = ss.transform(X_va)
 
 # Fit multiple classifiers with increasing regularization strength
 # Print a report card for each model
-for alpha in np.logspace(1, -4, 6):
+for alpha in np.logspace(-4, -4, 1):
     print('alpha = %.e' % alpha)
     lr = LogisticRegression(C=1/alpha, solver='liblinear')
     lr.fit(X_tr_bal, y_tr_bal)
