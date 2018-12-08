@@ -14,6 +14,7 @@ np.random.seed(2018)
 
 from imblearn.over_sampling import SMOTE
 from sklearn.preprocessing  import StandardScaler
+from sklearn.model_selection import StratifiedKFold
 
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from sklearn.linear_model import LogisticRegression
@@ -225,4 +226,47 @@ p_thresh = 0.5
 print_scorecard(y_tr_bal, y_pred_tr_bal > p_thresh, title='TRAIN (BAL.)')
 print_scorecard(y_tr, y_pred_tr > p_thresh, title='TRAIN')
 print_scorecard(y_va, y_pred_va > p_thresh, title='VALIDATION')
+
+
+# More rigorous test: use cross-validation, 5-folds
+histories = []
+fold_cntr = 0
+skf = StratifiedKFold(5, random_state=2018)
+for i_tr, i_va in skf.split(X, y):
+
+    # Create split datasets
+    X_tr = X[i_tr, :]
+    y_tr = y[i_tr]
+    c_tr = c[i_tr]
+    s_tr = s[i_tr]
+    ids_tr = ids[i_tr]
+
+    X_va = X[i_va, :]
+    y_va = y[i_va]
+    c_va = c[i_va]
+    s_va = s[i_va]
+    ids_va = ids[i_va]
+
+    print('Fold %d' % fold_cntr)
+    print('Positive labels in training set:   %d' % y_tr.sum())
+    print('Positive labels in validation set: %d' % y_va.sum())
+
+    # over sample with SMOTE
+    sm = SMOTE(random_state=2018)
+    X_tr_bal, y_tr_bal = sm.fit_sample(X_tr, y_tr)
+    print('Positive labels in balanced set:  %d' % y_tr_bal.sum())
+
+    # Centre and scale the features
+    ss = StandardScaler()
+    X_tr_bal = ss.fit_transform(X_tr_bal)
+    X_tr = ss.transform(X_tr)
+    X_va = ss.transform(X_va)
+
+    model, history, _ = fit_nn_model(lr0, h1, bsz, verbose=0)
+    histories.append(history)
+    y_pred_va = model.predict(X_va)[:, 0]
+    print_scorecard(y_va, y_pred_va > p_thresh, title='VALIDATION')
+
+    print()
+    fold_cntr += 1
 
