@@ -98,6 +98,9 @@ X_va = ss.transform(X_va)
 
 
 ## Linear classifier ##
+# Yields accuracy and perfect recall on positive class
+# Suffers from imperfect precision on positive class (gives false positives)
+# TODO: investigate changing balance between precision / recall by tweaking classification threshold
 
 # Fit multiple classifiers with increasing regularization strength
 # Print a report card for each model
