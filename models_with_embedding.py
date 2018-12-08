@@ -24,6 +24,18 @@ from sklearn.linear_model import LogisticRegression
 DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
 
 
+## Functions ##
+def print_scorecard(y_true, y_pred, title, beta=1.):
+
+    print(title + ':')
+    print('Accuracy: %.3f' % accuracy_score(y_true, y_pred))
+    p, r, f, s = precision_recall_fscore_support(y_true, y_pred, beta=beta)
+    print('precision: [%.3f, %.3f]' % (p[0], p[1]))
+    print('recall:    [%.3f, %.3f]' % (r[0], r[1]))
+    print('f_beta:    [%.3f, %.3f]' % (f[0], f[1]))
+    print('support:   [%.3f, %.3f]' % (s[0], s[1]))
+
+
 ## Main ##
 
 # Load data from file
@@ -95,29 +107,11 @@ for alpha in np.logspace(1, -4, 6):
     y_pred_tr = lr.predict(X_tr)
     y_pred_va = lr.predict(X_va)
 
-    print('TRAIN (BAL.):')
-    print('Accuracy: %.3f' % accuracy_score(y_tr_bal, y_pred_tr_bal))
-    p, r, f, s = precision_recall_fscore_support(y_tr_bal, y_pred_tr_bal, beta=1.)
-    print('precision: [%.3f, %.3f]' % (p[0], p[1]))
-    print('recall:    [%.3f, %.3f]' % (r[0], r[1]))
-    print('f_beta:    [%.3f, %.3f]' % (f[0], f[1]))
-    print('support:   [%.3f, %.3f]' % (s[0], s[1]))
+    print_scorecard(y_tr_bal, y_pred_tr_bal, title='TRAIN (BAL.)')
     print()
-    print('TRAIN:')
-    print('Accuracy: %.3f' % accuracy_score(y_tr, y_pred_tr))
-    p, r, f, s = precision_recall_fscore_support(y_tr, y_pred_tr, beta=1.)
-    print('precision: [%.3f, %.3f]' % (p[0], p[1]))
-    print('recall:    [%.3f, %.3f]' % (r[0], r[1]))
-    print('f_beta:    [%.3f, %.3f]' % (f[0], f[1]))
-    print('support:   [%.3f, %.3f]' % (s[0], s[1]))
+    print_scorecard(y_tr, y_pred_tr, title='TRAIN')
     print()
-    print('VALIDATION:')
-    print('Accuracy: %.3f' % accuracy_score(y_va, y_pred_va))
-    p, r, f, s = precision_recall_fscore_support(y_va, y_pred_va, beta=1.)
-    print('precision: [%.3f, %.3f]' % (p[0], p[1]))
-    print('recall:    [%.3f, %.3f]' % (r[0], r[1]))
-    print('f_beta:    [%.3f, %.3f]' % (f[0], f[1]))
-    print('support:   [%.3f, %.3f]' % (s[0], s[1]))
+    print_scorecard(y_va, y_pred_va, title='VALIDATION')
     print()
     print()
 
