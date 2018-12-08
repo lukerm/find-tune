@@ -21,9 +21,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 
 from keras.layers import Input, Dense, Activation
-from keras.models import Model
+from keras.models import Model, load_model
 from keras.optimizers import Adam
-from keras.callbacks import ReduceLROnPlateau, EarlyStopping
+from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
 
 
 ## Constants ##
@@ -177,7 +177,7 @@ print_negatives(y_va, y_pred_va, c_va, ytids=ids_va, num_secs=s_va)
 ## Dense Neural Network ##
 # Without any hyperparameter tuning, the network gets a perfect score on all metrics!
 
-def fit_nn_model(lr0, h1, bsz, verbose=0):
+def fit_nn_model(lr0, h1, bsz, verbose=0, cp_path=None):
     """
     Generic model for fitting a 1-layer neural network
     """
@@ -185,6 +185,9 @@ def fit_nn_model(lr0, h1, bsz, verbose=0):
     # Callbacks
     lr_red = ReduceLROnPlateau(monitor='val_loss', min_delta=0, factor=0.75, patience=2)
     e_stop = EarlyStopping(monitor='val_loss', min_delta=0, patience=15)
+    cbacks = [lr_red, e_stop]
+    if cp_path is not None:
+        cbacks.append(ModelCheckpoint(cp_path, save_best_only=True))
 
 
     # Model architecture
@@ -203,7 +206,7 @@ def fit_nn_model(lr0, h1, bsz, verbose=0):
     # Fit the model
     history = model.fit(X_tr_bal, y_tr_bal,
                         epochs=200, batch_size=bsz,
-                        callbacks = [lr_red, e_stop],
+                        callbacks=cbacks,
                         validation_data=(X_va, y_va),
                         verbose=verbose,
                         )
@@ -262,10 +265,14 @@ for i_tr, i_va in skf.split(X, y):
     X_tr = ss.transform(X_tr)
     X_va = ss.transform(X_va)
 
-    model, history, _ = fit_nn_model(lr0, h1, bsz, verbose=0)
+    save_path = os.path.join(os.path.expanduser('~'), 'find-tune', 'data', 'nn_fold%d.model' % fold_cntr)
+    _, history, _ = fit_nn_model(lr0, h1, bsz, verbose=0, cp_path=save_path)
     histories.append(history)
+
+    model = load_model(save_path)
     y_pred_va = model.predict(X_va)[:, 0]
     print_scorecard(y_va, y_pred_va > p_thresh, title='VALIDATION')
+    print_negatives(y_va, y_pred_va > p_thresh, c_va, ytids=ids_va, num_secs=s_va)
 
     print()
     fold_cntr += 1
