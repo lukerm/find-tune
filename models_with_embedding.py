@@ -39,6 +39,32 @@ def print_scorecard(y_true, y_pred, title, beta=1.):
     print()
 
 
+def print_negatives(y_true, y_pred, categories, ytids=None, num_secs=None):
+    if ytids is not None or num_secs is not None:
+        assert len(ytids) == len(num_secs)
+        print_ids = True
+    else:
+        print_ids = False
+
+    i_fp = np.where((y_pred == 1) & (y_true == 0))[0]
+    i_fn = np.where((y_pred == 0) & (y_true == 1))[0]
+    print('Number of false positives: %d' % len(i_fp))
+    print(categories[i_fp])
+    print('Number of false negatives: %d' % len(i_fn))
+    print(categories[i_fn])
+
+    if print_ids:
+        print()
+        if len(i_fp) > 0:
+            print('False positive IDs:')
+            for i, s, c in zip(ytids[i_fp], num_secs[i_fp], categories[i_fp]):
+                print('Video ID: %s (%ds due to %s)' % (i, s, c))
+        if len(i_fn) > 0:
+            print('False negative IDs:')
+            for i, s, c in zip(ytids[i_fn], num_secs[i_fn], categories[i_fn]):
+                print('Video ID: %s (%ds due to %s)' % (i, s, c))
+
+
 ## Main ##
 
 # Load data from file
@@ -119,27 +145,8 @@ for alpha in np.logspace(1, -4, 6):
     print_scorecard(y_va, y_pred_va, title='VALIDATION')
     print()
 
-
-# Check category of the missclassified (false positives) - are they musical?
-tp = np.where((y_pred_va == 1) & (y_va == 1))[0]
-fp = np.where((y_pred_va == 1) & (y_va == 0))[0]
-print('Number of true positives (validation):  %d' % len(tp))
-print(c_va[tp])
-print('Number of false positives (validation): %d' % len(fp))
-print(c_va[fp])
-
-for i, s, c in zip(ids_va[fp], s_va[fp], c_va[fp]):
-    print('Video ID: %s (%ds due to %s)' % (i, s, c))
-
-tp = np.where((y_pred_tr == 1) & (y_tr == 1))[0]
-fp = np.where((y_pred_tr == 1) & (y_tr == 0))[0]
-print('Number of true positives (train):  %d' % len(tp))
-print(c_tr[tp])
-print('Number of false positives (train): %d' % len(fp))
-print(c_tr[fp])
-
-for i, s, c in zip(ids_tr[fp], s_tr[fp], c_tr[fp]):
-    print('Video ID: %s (%ds due to %s)' % (i, s, c))
+# An analysis of incorrect predictions
+print_negatives(y_va, y_pred_va, c_va, ytids=ids_va, num_secs=s_va)
 
 
 ## Random Forest ##
@@ -156,3 +163,6 @@ y_pred_va = rf.predict(X_va)
 print_scorecard(y_tr_bal, y_pred_tr_bal, title='TRAIN (BAL.)')
 print_scorecard(y_tr, y_pred_tr, title='TRAIN')
 print_scorecard(y_va, y_pred_va, title='VALIDATION')
+print()
+
+print_negatives(y_va, y_pred_va, c_va, ytids=ids_va, num_secs=s_va)
