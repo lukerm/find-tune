@@ -8,3 +8,4 @@
 *.npz
 *.pkl
 .ipynb_checkpoints/*
+*.model
