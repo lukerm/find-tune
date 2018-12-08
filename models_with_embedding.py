@@ -17,6 +17,7 @@ from sklearn.preprocessing  import StandardScaler
 
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 
 
 ## Constants ##
@@ -138,3 +139,19 @@ print(c_tr[fp])
 
 for i, s, c in zip(ids_tr[fp], s_tr[fp], c_tr[fp]):
     print('Video ID: %s (%ds due to %s)' % (i, s, c))
+
+
+## Random Forest ##
+# Performs quite well, good accuracy
+# Perfect precision on positive class (desirable: don't want false positives)
+# Note: overfits without cap on depth
+rf = RandomForestClassifier(n_estimators = 50, max_depth = 5)
+#rf.fit(X_tr_bal, y_tr_bal)
+rf.fit(X_tr, y_tr)
+y_pred_tr_bal = rf.predict(X_tr_bal)
+y_pred_tr = rf.predict(X_tr)
+y_pred_va = rf.predict(X_va)
+
+print_scorecard(y_tr_bal, y_pred_tr_bal, title='TRAIN (BAL.)')
+print_scorecard(y_tr, y_pred_tr, title='TRAIN')
+print_scorecard(y_va, y_pred_va, title='VALIDATION')
