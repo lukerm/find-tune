@@ -19,6 +19,11 @@ from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 
+from keras.layers import Input, Dense, Activation
+from keras.models import Model
+from keras.optimizers import Adam
+from keras.callbacks import ReduceLROnPlateau, EarlyStopping
+
 
 ## Constants ##
 
@@ -166,3 +171,47 @@ print_scorecard(y_va, y_pred_va, title='VALIDATION')
 print()
 
 print_negatives(y_va, y_pred_va, c_va, ytids=ids_va, num_secs=s_va)
+
+
+## Dense Neural Network ##
+# Without any hyperparameter tuning, the network gets a perfect score on all metrics!
+
+# Hyperparameters
+lr0 = 0.01
+h1  = 128
+bsz = 64
+
+# Callbacks
+lr_red = ReduceLROnPlateau(monitor='val_loss', min_delta=0, factor=0.75, patience=1)
+e_stop = EarlyStopping(monitor='val_loss', min_delta=0, patience=15)
+
+# Model architecture
+ix = Input((X_tr_bal.shape[1],), name='vggish_feat_input')
+x  = Dense(h1, activation='linear', name='dense_1')(ix)
+x  = Activation('relu', name='relu_actv_1')(x)
+x  = Dense(1, activation='sigmoid', name='classify')(x)
+
+# Compile the Model
+model = Model(ix, x)
+optzr = Adam(lr=lr0)
+model.compile(optzr, loss='binary_crossentropy', metrics=['accuracy'])
+# Pre-training metrics
+ep0_tr = model.evaluate(X_tr_bal, y_tr_bal, verbose=0)
+ep0_va = model.evaluate(X_va, y_va, verbose=0)
+# Fit the model
+history = model.fit(X_tr_bal, y_tr_bal,
+                    epochs=200, batch_size=bsz, verbose=1,
+                    callbacks = [lr_red, e_stop],
+                    validation_data=(X_va, y_va)
+                    )
+
+# Make (probability) predictions
+y_pred_tr_bal = model.predict(X_tr_bal)[:, 0]
+y_pred_tr = model.predict(X_tr)[:, 0]
+y_pred_va = model.predict(X_va)[:, 0]
+
+p_thresh = 0.5
+print_scorecard(y_tr_bal, y_pred_tr_bal > p_thresh, title='TRAIN (BAL.)')
+print_scorecard(y_tr, y_pred_tr > p_thresh, title='TRAIN')
+print_scorecard(y_va, y_pred_va > p_thresh, title='VALIDATION')
+
