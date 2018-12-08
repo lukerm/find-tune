@@ -87,7 +87,7 @@ X_va = ss.transform(X_va)
 
 # Fit multiple classifiers with increasing regularization strength
 # Print a report card for each model
-for alpha in np.logspace(0, -5, 6):
+for alpha in np.logspace(1, -4, 6):
     print('alpha = %.e' % alpha)
     lr = LogisticRegression(C=1/alpha, solver='liblinear')
     lr.fit(X_tr_bal, y_tr_bal)
@@ -129,6 +129,9 @@ print('Number of true positives (validation):  %d' % len(tp))
 print(c_va[tp])
 print('Number of false positives (validation): %d' % len(fp))
 print(c_va[fp])
+
+for i, s, c in zip(ids_va[fp], s_va[fp], c_va[fp]):
+    print('Video ID: %s (%ds due to %s)' % (i, s, c))
 
 tp = np.where((y_pred_tr == 1) & (y_tr == 1))[0]
 fp = np.where((y_pred_tr == 1) & (y_tr == 0))[0]
