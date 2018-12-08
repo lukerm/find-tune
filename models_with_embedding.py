@@ -25,6 +25,7 @@ DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
 
 
 ## Functions ##
+
 def print_scorecard(y_true, y_pred, title, beta=1.):
 
     print(title + ':')
@@ -34,6 +35,7 @@ def print_scorecard(y_true, y_pred, title, beta=1.):
     print('recall:    [%.3f, %.3f]' % (r[0], r[1]))
     print('f_beta:    [%.3f, %.3f]' % (f[0], f[1]))
     print('support:   [%.3f, %.3f]' % (s[0], s[1]))
+    print()
 
 
 ## Main ##
@@ -108,11 +110,8 @@ for alpha in np.logspace(1, -4, 6):
     y_pred_va = lr.predict(X_va)
 
     print_scorecard(y_tr_bal, y_pred_tr_bal, title='TRAIN (BAL.)')
-    print()
     print_scorecard(y_tr, y_pred_tr, title='TRAIN')
-    print()
     print_scorecard(y_va, y_pred_va, title='VALIDATION')
-    print()
     print()
 
 
