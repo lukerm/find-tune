@@ -94,6 +94,7 @@ print('Negative labels in balanced training set: %d' % (y_tr_bal==0).sum())
 # Centre and scale the features
 ss = StandardScaler()
 X_tr_bal = ss.fit_transform(X_tr_bal)
+X_tr = ss.transform(X_tr)
 X_va = ss.transform(X_va)
 
 
