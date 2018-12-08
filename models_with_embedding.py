@@ -8,7 +8,7 @@ Created on Tue Dec  4 20:20:37 2018
 ## Imports ##
 
 import os
-
+import pickle
 import numpy as np
 np.random.seed(2018)
 
@@ -264,8 +264,11 @@ for i_tr, i_va in skf.split(X, y):
     X_tr_bal = ss.fit_transform(X_tr_bal)
     X_tr = ss.transform(X_tr)
     X_va = ss.transform(X_va)
+    data_dir = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
+    with open(os.path.join(data_dir, 'sc_fold%d.pkl' % fold_cntr), 'wb') as f:
+        pickle.dump(ss, f)
 
-    save_path = os.path.join(os.path.expanduser('~'), 'find-tune', 'data', 'nn_fold%d.model' % fold_cntr)
+    save_path = os.path.join(data_dir, 'nn_fold%d.model' % fold_cntr)
     _, history, _ = fit_nn_model(lr0, h1, bsz, verbose=0, cp_path=save_path)
     histories.append(history)
 
