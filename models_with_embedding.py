@@ -19,7 +19,6 @@ from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from sklearn.linear_model import LogisticRegression
 
 
-
 ## Constants ##
 
 DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
@@ -34,10 +33,10 @@ X, y, c, s, ids = data['X'], data['y'], data['c'], data['s'], data['i']
 # Train (80%) / val (20%) split
 p = np.mean(y)
 N = int(len(y)*0.2)
-print('p: %.4f' % p) # ~ 1/1000
-print('N: %d'   % N) # ~ 5000
+print('p: %.4f' % p) # ~ 7.5/1000
+print('N: %d'   % N) # ~ 700
 
-# Note that whilst the mean of Binomial(5000, 0.001) is 5, there is a very real chance that
+# Note that whilst the mean of Binomial(N, p) is ~5, there is a very real chance that
 # we could have very few positive data points in the validation set if we're not careful
 print('P(X < 3) = %.3f (where X ~ Bin(N, p))' % np.mean(np.random.binomial(N, p, size=100000) < 3))
 
