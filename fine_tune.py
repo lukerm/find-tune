@@ -17,6 +17,10 @@ from keras.models import Sequential, load_model
 from keras import layers as lyr
 from keras.optimizers import SGD
 
+import sys
+sys.path.append(os.path.join(os.path.expanduser('~'), 'find-tune')) # TODO: do this during setup
+import perf_utils as pu
+
 
 ## Constants ##
 
@@ -152,6 +156,10 @@ c_wts = {0: sum(y_tr)/sum(y_tr == 0), 1: 1}
 L_tr = L_tr[:,:,:,None]
 L_va = L_va[:,:,:,None]
 
+# Predictions before
+y_pred_bfr_tr = vggish.predict(L_tr)[:, 0]
+y_pred_bfr_va = vggish.predict(L_va)[:, 0]
+
 # Fine-tune the model
 history = vggish.fit(L_tr, y_tr,
                       epochs=1, batch_size=64,
@@ -160,3 +168,22 @@ history = vggish.fit(L_tr, y_tr,
                       verbose=1,
                     )
 
+# Predictions after
+y_pred_aft_tr = vggish.predict(L_tr)[:, 0]
+y_pred_aft_va = vggish.predict(L_va)[:, 0]
+
+print('BEFORE TUNING:')
+print()
+pu.print_scorecard(y_tr, y_pred_bfr_tr > 0.5, title='TRAIN')
+pu.print_negatives(y_tr, y_pred_bfr_tr > 0.5, c_tr, ytids=ids_tr, num_secs=s_tr)
+
+pu.print_scorecard(y_va, y_pred_bfr_va > 0.5, title='VALIDATION')
+pu.print_negatives(y_va, y_pred_bfr_va > 0.5, c_va, ytids=ids_va, num_secs=s_va)
+
+print('AFTER TUNING:')
+print()
+pu.print_scorecard(y_tr, y_pred_aft_tr > 0.5, title='TRAIN')
+pu.print_negatives(y_tr, y_pred_aft_tr > 0.5, c_tr, ytids=ids_tr, num_secs=s_tr)
+
+pu.print_scorecard(y_va, y_pred_aft_va > 0.5, title='VALIDATION')
+pu.print_negatives(y_va, y_pred_aft_va > 0.5, c_va, ytids=ids_va, num_secs=s_va)
