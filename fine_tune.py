@@ -47,10 +47,10 @@ with tf.Graph().as_default(), tf.Session() as session:
     saver = tf.train.Saver(vggish_vars, name='vggish_load_pretrained', write_version=1)
     saver.restore(session, checkpoint_path)
 
-    model_vars = {}
+    model_wts = {}
     for var in vggish_vars:
         try:
-            model_vars[var.name] = var.eval()
+            model_wts[var.name] = var.eval()
         except:
             print("For var={}, an exception occurred".format(var.name))
 
@@ -61,38 +61,68 @@ with tf.Graph().as_default(), tf.Session() as session:
 vggish = Sequential()
 conv1  = lyr.Conv2D(filters=64, kernel_size=(3,3), strides=1, padding='same', activation='relu', name='conv1',
                     input_shape=(params.NUM_FRAMES, params.NUM_BANDS, 1))
-pool1  = lyr.MaxPooling2D(pool_size=(2,2), strides=2, name='pool1')
 vggish.add(conv1)
+# Set its weights, defined in model_vars
+conv1.set_weights([model_wts['vggish/conv1/weights:0'], model_wts['vggish/conv1/biases:0']])
+conv1.trainable = False # Freeze this layer
+
+pool1  = lyr.MaxPooling2D(pool_size=(2,2), strides=2, name='pool1')
 vggish.add(pool1)
+# Note: no weights for pooling layers
 
 conv2  = lyr.Conv2D(filters=128, kernel_size=(3,3), strides=1, padding='same', activation='relu', name='conv2')
-pool2  = lyr.MaxPooling2D(pool_size=(2,2), strides=2, name='pool2')
 vggish.add(conv2)
+conv2.set_weights([model_wts['vggish/conv2/weights:0'], model_wts['vggish/conv2/biases:0']])
+conv2.trainable = False
+
+pool2  = lyr.MaxPooling2D(pool_size=(2,2), strides=2, name='pool2')
 vggish.add(pool2)
 
 conv3_1= lyr.Conv2D(filters=256, kernel_size=(3,3), strides=1, padding='same', activation='relu', name='conv3_1')
-conv3_2= lyr.Conv2D(filters=256, kernel_size=(3,3), strides=1, padding='same', activation='relu', name='conv3_2')
-pool3  = lyr.MaxPooling2D(pool_size=(2,2), strides=2, name='pool3')
 vggish.add(conv3_1)
+conv3_1.set_weights([model_wts['vggish/conv3/conv3_1/weights:0'], model_wts['vggish/conv3/conv3_1/biases:0']])
+conv3_1.trainable = False
+
+conv3_2= lyr.Conv2D(filters=256, kernel_size=(3,3), strides=1, padding='same', activation='relu', name='conv3_2')
 vggish.add(conv3_2)
+conv3_2.set_weights([model_wts['vggish/conv3/conv3_2/weights:0'], model_wts['vggish/conv3/conv3_2/biases:0']])
+conv3_2.trainable = False
+
+pool3  = lyr.MaxPooling2D(pool_size=(2,2), strides=2, name='pool3')
 vggish.add(pool3)
 
 conv4_1= lyr.Conv2D(filters=512, kernel_size=(3,3), strides=1, padding='same', activation='relu', name='conv4_1')
-conv4_2= lyr.Conv2D(filters=512, kernel_size=(3,3), strides=1, padding='same', activation='relu', name='conv4_2')
-pool4  = lyr.MaxPooling2D(pool_size=(2,2), strides=2, name='pool4')
 vggish.add(conv4_1)
+conv4_1.set_weights([model_wts['vggish/conv4/conv4_1/weights:0'], model_wts['vggish/conv4/conv4_1/biases:0']])
+conv4_1.trainable = False
+
+conv4_2= lyr.Conv2D(filters=512, kernel_size=(3,3), strides=1, padding='same', activation='relu', name='conv4_2')
 vggish.add(conv4_2)
+conv4_2.set_weights([model_wts['vggish/conv4/conv4_2/weights:0'], model_wts['vggish/conv4/conv4_2/biases:0']])
+conv4_2.trainable = False
+
+pool4  = lyr.MaxPooling2D(pool_size=(2,2), strides=2, name='pool4')
 vggish.add(pool4)
 
 vggish.add(lyr.Flatten()) # TODO: check channels_first or _last
 
 fc1_1  = lyr.Dense(4096, activation='relu', name='fc1_1')
-fc1_2  = lyr.Dense(4096, activation='relu', name='fc1_2')
 vggish.add(fc1_1)
-vggish.add(fc1_2)
+fc1_1.set_weights([model_wts['vggish/fc1/fc1_1/weights:0'], model_wts['vggish/fc1/fc1_1/biases:0']])
+fc1_1.trainable = False
 
+fc1_2  = lyr.Dense(4096, activation='relu', name='fc1_2')
+vggish.add(fc1_2)
+fc1_2.set_weights([model_wts['vggish/fc1/fc1_2/weights:0'], model_wts['vggish/fc1/fc1_2/biases:0']])
+fc1_2.trainable = False
+
+# Note: first trainable layer in network
 fc2    = lyr.Dense(params.EMBEDDING_SIZE, activation='relu', name='fc2')
 vggish.add(fc2)
+fc2.set_weights([model_wts['vggish/fc2/weights:0'], model_wts['vggish/fc2/biases:0']])
+fc2.trainable = True
+
+# Append our model on top of the VGGish embedding layer
 
 # Load keras model representing the final part of classification task
 model_head = load_model(os.path.join(DATA_DIR, 'nn_fold3.model'))
@@ -101,18 +131,16 @@ model_head = load_model(os.path.join(DATA_DIR, 'nn_fold3.model'))
 h_last = model_head.get_layer('fc_last').output_shape[-1]
 a_last = model_head.get_layer('fc_last').activation
 fc_last= lyr.Dense(h_last, activation=a_last, name='fc_last')
-# We need to set the weights, but will do that below
 vggish.add(fc_last)
+# We need to set the weights
+fc_last.set_weights(model_head.get_layer('fc_last').get_weights())
 
 # Make a copy of fc_last layer, then add it to vggish
 a_cfy = model_head.get_layer('classify').activation
 classify = lyr.Dense(1, activation=a_cfy, name='classify')
 vggish.add(classify)
+classify.set_weights(model_head.get_layer('classify').get_weights())
 
 optzr  = Adam(lr=0.00000001) # TODO: make this appropriate, esp. lr
 vggish.compile(optzr, loss='binary_crossentropy')
 
-
-# TODO: set the weights within the layers with, e.g.:
-# conv1.set_weights([model_vars['vggish/conv1/weights:0'], model_vars['vggish/conv1/biases:0']])
-# Possible to shortcut this if we can prepare a set of weights like vggish.get_weights(), but beware biases
