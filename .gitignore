@@ -9,3 +9,4 @@
 *.pkl
 .ipynb_checkpoints/*
 *.model
+*.h5
