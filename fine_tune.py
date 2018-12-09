@@ -24,17 +24,17 @@ VGGISH_DIR = os.path.join(os.path.expanduser('~'), 'tf-models','research','audio
 checkpoint_path = os.path.join(VGGISH_DIR, 'vggish_model.ckpt')
 
 # The fold to concentrate on: see models_with_embedding.py
-FOLD_NUM = 3
+FOLD_NUM = 0
 DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data', 'fold%d' % FOLD_NUM)
 
 
 ## Main ##
 
 # Load training and val set for this fold
-data_tr = np.load(os.path.join(DATA_DIR, 'foldwise_data_bal.npz'))
-X_tr_bal, y_tr_bal = data_tr['X'], data_tr['y']
+data_tr = np.load(os.path.join(DATA_DIR, 'foldwise_data_tr.npz'))
+X_tr, y_tr, c_tr, s_tr, ids_tr, L_tr = data_tr['X'], data_tr['y'], data_tr['c'], data_tr['s'], data_tr['i'], data_tr['L']
 data_va = np.load(os.path.join(DATA_DIR, 'foldwise_data_va.npz'))
-X_va, y_va, c_va, s_va, ids_va = data_va['X'], data_va['y'], data_va['c'], data_va['s'], data_va['i']
+X_va, y_va, c_va, s_va, ids_va, L_va = data_va['X'], data_va['y'], data_va['c'], data_va['s'], data_va['i'], data_va['L']
 
 
 # Extract the VGGish variables from the checkpoint file

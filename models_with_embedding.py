@@ -39,7 +39,7 @@ print('=== Preparing data ===')
 
 # Load data from file
 data = np.load(os.path.join(DATA_DIR, 'embedding_data.npz'))
-X, y, c, s, ids = data['X'], data['y'], data['c'], data['s'], data['i']
+X, y, c, s, ids, L = data['X'], data['y'], data['c'], data['s'], data['i'], data['L']
 
 # Train (80%) / val (20%) split
 p = np.mean(y)
@@ -67,12 +67,14 @@ y_tr = y[np.append(i_neg_tr, i_pos_tr)]
 c_tr = c[np.append(i_neg_tr, i_pos_tr)]
 s_tr = s[np.append(i_neg_tr, i_pos_tr)]
 ids_tr = ids[np.append(i_neg_tr, i_pos_tr)]
+L_tr = L[np.append(i_neg_tr, i_pos_tr), :, :]
 
 X_va = X[np.append(i_neg_va, i_pos_va), :]
 y_va = y[np.append(i_neg_va, i_pos_va)]
 c_va = c[np.append(i_neg_va, i_pos_va)]
 s_va = s[np.append(i_neg_va, i_pos_va)]
 ids_va = ids[np.append(i_neg_va, i_pos_va)]
+L_va = L[np.append(i_neg_va, i_pos_va), :, :]
 
 print('Positive labels in training set:   %d' % y_tr.sum())
 print('Positive labels in validation set: %d' % y_va.sum())
@@ -204,8 +206,8 @@ pu.print_scorecard(y_va, y_pred_va > p_thresh, title='VALIDATION')
 
 
 # More rigorous test: use cross-validation, 5-folds
-# When I run this, the validation sets on folds 2 and 3 seem to be the 'hardest', as they both
-# let in two false positives (2 = 'Wind Chime', 3 = 'Doorbell')
+# When I run this, the validation sets on fold 0 seems to be the 'hardest', as it lets false positives
+# from the categories: 'Wind Chime', 'Glockenspiel', 'Jingle bell'
 print('\n')
 print('=== Neural network classifier (5-fold CV) ===')
 print()
@@ -224,12 +226,14 @@ for i_tr, i_va in skf.split(X, y):
     c_tr = c[i_tr]
     s_tr = s[i_tr]
     ids_tr = ids[i_tr]
+    L_tr = L[i_tr, :, :]
 
     X_va = X[i_va, :]
     y_va = y[i_va]
     c_va = c[i_va]
     s_va = s[i_va]
     ids_va = ids[i_va]
+    L_va = L[i_va, :, :]
 
     print('Fold %d' % fold_cntr)
     print('Positive labels in training set:   %d' % y_tr.sum())
@@ -249,8 +253,8 @@ for i_tr, i_va in skf.split(X, y):
         pickle.dump(ss, f)
 
     # Save data (with input scaled features) for later reference
-    np.savez(os.path.join(fold_dir, 'foldwise_data_tr.npz'), X=X_tr, y=y_tr, c=c_tr, s=s_tr, i=ids_tr)
-    np.savez(os.path.join(fold_dir, 'foldwise_data_va.npz'), X=X_va, y=y_va, c=c_va, s=s_va, i=ids_va)
+    np.savez(os.path.join(fold_dir, 'foldwise_data_tr.npz'), X=X_tr, y=y_tr, c=c_tr, s=s_tr, i=ids_tr, L=L_tr)
+    np.savez(os.path.join(fold_dir, 'foldwise_data_va.npz'), X=X_va, y=y_va, c=c_va, s=s_va, i=ids_va, L=L_va)
     np.savez(os.path.join(fold_dir, 'foldwise_data_bal.npz'), X=X_tr_bal, y=y_tr_bal)
 
     # Fit the model

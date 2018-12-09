@@ -75,8 +75,9 @@ with tf.Graph().as_default(), tf.Session() as sess:
         ytid_data[yt_id]['n_sec']     = list(range(1, len(my_embedding)+1))
         ytid_data[yt_id]['ytid']      = [yt_id] * len(my_embedding)
 
-# Stack embeddings (X), labels (y), categories (c), number of seconds (s) & ids (i)
+# Stack embeddings (X), log_mel data (L),labels (y), categories (c), number of seconds (s) & ids (i)
 X = np.ndarray((0, ytid_data['target']['embedding'].shape[-1]))
+L = np.ndarray((0,) + ytid_data['target']['log_mel'].shape[1:])
 y = []
 c = []
 s = []
@@ -86,11 +87,13 @@ i = []
 # Otherwise, you should pre-assign a matrix of correct size and use pointers
 for k, v in ytid_data.items():
     X  = np.concatenate([X, v['embedding']], axis=0)
+    L  = np.concatenate([L, v['log_mel']], axis=0)
     y += v['labels']
     c += v['cat_list']
     s += v['n_sec']
     i += v['ytid']
 
+assert len(X) == len(L)
 assert len(X) == len(y)
 assert len(X) == len(c)
 assert len(X) == len(s)
@@ -103,6 +106,6 @@ s = np.array(s)
 i = np.array(i)
 
 # Save to data file
-np.savez(os.path.join(DATA_DIR, 'embedding_data.npz'), X=X, y=y, c=c, s=s, i=i)
+np.savez(os.path.join(DATA_DIR, 'embedding_data.npz'), X=X, y=y, c=c, s=s, i=i, L=L)
 with open(os.path.join(DATA_DIR, 'yt_clips_dict.pkl'), 'wb') as f:
     pickle.dump(ytid_data, f)
