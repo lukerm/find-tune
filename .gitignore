@@ -4,6 +4,7 @@
 !data/ontology.json
 *.txt
 !data/non-target_categories.txt
+!requirements.txt
 *.csv
 *.npz
 *.pkl

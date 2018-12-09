@@ -1,0 +1,11 @@
+six
+numpy
+pandas
+sklearn
+imblearn
+tensorflow
+keras
+PyAudio>=0.2.11
+seaborn>=0.9.0
+scipy
+resampy
