@@ -125,7 +125,7 @@ fc2.trainable = True
 # Append our model on top of the VGGish embedding layer
 
 # Load keras model representing the final part of classification task
-model_head = load_model(os.path.join(DATA_DIR, 'nn_fold3.model'))
+model_head = load_model(os.path.join(DATA_DIR, 'nn_fold%d.model') % FOLD_NUM)
 
 # Make a copy of fc_last layer, then add it to vggish
 h_last = model_head.get_layer('fc_last').output_shape[-1]
