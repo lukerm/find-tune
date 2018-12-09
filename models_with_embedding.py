@@ -202,8 +202,7 @@ def fit_nn_model(lr0, h1, bsz, verbose=0, cp_path=None):
 
     # Model architecture
     ix = Input((X_tr_bal.shape[1],), name='vggish_feat_input')
-    x  = Dense(h1, activation='linear', name='dense_1')(ix)
-    x  = Activation('relu', name='relu_actv_1')(x)
+    x  = Dense(h1, activation='relu', name='fc_last')(ix)
     x  = Dense(1, activation='sigmoid', name='classify')(x)
 
     # Compile the Model
@@ -242,6 +241,8 @@ print_scorecard(y_va, y_pred_va > p_thresh, title='VALIDATION')
 
 
 # More rigorous test: use cross-validation, 5-folds
+# When I run this, the validation sets on folds 2 and 3 seem to be the 'hardest', as they both
+# let in two false positives (2 = 'Wind Chime', 3 = 'Doorbell')
 print('\n')
 print('=== Neural network classifier (5-fold CV) ===')
 print()
