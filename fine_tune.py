@@ -8,6 +8,7 @@ Created on Sat Dec  8 21:32:49 2018
 ## Imports ##
 
 import os
+import json
 import numpy as np
 import tensorflow as tf
 import vggish_slim
@@ -27,17 +28,19 @@ import perf_utils as pu
 VGGISH_DIR = os.path.join(os.path.expanduser('~'), 'tf-models','research','audioset') # TODO: at setup
 checkpoint_path = os.path.join(VGGISH_DIR, 'vggish_model.ckpt')
 
+DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
+
 # The fold to concentrate on: see models_with_embedding.py
 FOLD_NUM = 0
-DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data', 'fold%d' % FOLD_NUM)
+FOLD_DIR = os.path.join(DATA_DIR, 'fold%d' % FOLD_NUM)
 
 
 ## Main ##
 
 # Load training and val set for this fold
-data_tr = np.load(os.path.join(DATA_DIR, 'foldwise_data_tr.npz'))
+data_tr = np.load(os.path.join(FOLD_DIR, 'foldwise_data_tr.npz'))
 X_tr, y_tr, c_tr, s_tr, ids_tr, L_tr = data_tr['X'], data_tr['y'], data_tr['c'], data_tr['s'], data_tr['i'], data_tr['L']
-data_va = np.load(os.path.join(DATA_DIR, 'foldwise_data_va.npz'))
+data_va = np.load(os.path.join(FOLD_DIR, 'foldwise_data_va.npz'))
 X_va, y_va, c_va, s_va, ids_va, L_va = data_va['X'], data_va['y'], data_va['c'], data_va['s'], data_va['i'], data_va['L']
 
 
@@ -129,7 +132,7 @@ fc2.trainable = True
 # Append our model on top of the VGGish embedding layer
 
 # Load keras model representing the final part of classification task
-model_head = load_model(os.path.join(DATA_DIR, 'nn_fold%d.model') % FOLD_NUM)
+model_head = load_model(os.path.join(FOLD_DIR, 'nn_fold%d.model') % FOLD_NUM)
 
 # Make a copy of fc_last layer, then add it to vggish
 h_last = model_head.get_layer('fc_last').output_shape[-1]
@@ -209,3 +212,10 @@ pu.print_negatives(y_tr, y_pred_tr > 0.9, c_tr, ytids=ids_tr, num_secs=s_tr)
 
 pu.print_scorecard(y_va, y_pred_va > 0.9, title='VALIDATION')
 pu.print_negatives(y_va, y_pred_va > 0.9, c_va, ytids=ids_va, num_secs=s_va)
+
+
+# Save the created model
+vggish.save_weights(os.path.join(DATA_DIR, 'my_vggish_network.h5')) # Weights a HDF5
+model_dict = json.loads(vggish.to_json()) # Architecture as JSON
+with open(os.path.join(DATA_DIR, 'my_vggish_network.json'), 'w') as j:
+    json.dump(model_dict, j)
