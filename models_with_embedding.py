@@ -250,6 +250,10 @@ fold_cntr = 0
 skf = StratifiedKFold(5, random_state=2018)
 for i_tr, i_va in skf.split(X, y):
 
+    # Storage for data / models relating to this fold
+    fold_dir = os.path.join(DATA_DIR, 'fold%d' % fold_cntr)
+    os.makedirs(fold_dir, exist_ok=True)
+
     # Create split datasets
     X_tr = X[i_tr, :]
     y_tr = y[i_tr]
@@ -270,21 +274,27 @@ for i_tr, i_va in skf.split(X, y):
     # over sample with SMOTE
     sm = SMOTE(random_state=2018)
     X_tr_bal, y_tr_bal = sm.fit_sample(X_tr, y_tr)
-    print('Positive labels in balanced set:  %d' % y_tr_bal.sum())
+    print('Positive labels in balanced set:   %d' % y_tr_bal.sum())
 
     # Centre and scale the features
     ss = StandardScaler()
     X_tr_bal = ss.fit_transform(X_tr_bal)
     X_tr = ss.transform(X_tr)
     X_va = ss.transform(X_va)
-    data_dir = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
-    with open(os.path.join(data_dir, 'sc_fold%d.pkl' % fold_cntr), 'wb') as f:
+    with open(os.path.join(fold_dir, 'sc_fold%d.pkl' % fold_cntr), 'wb') as f:
         pickle.dump(ss, f)
 
-    save_path = os.path.join(data_dir, 'nn_fold%d.model' % fold_cntr)
+    # Save data (with input scaled features) for later reference
+    np.savez(os.path.join(fold_dir, 'foldwise_data_tr.npz'), X=X_tr, y=y_tr, c=c_tr, s=s_tr, i=i_tr)
+    np.savez(os.path.join(fold_dir, 'foldwise_data_va.npz'), X=X_va, y=y_va, c=c_va, s=s_va, i=i_va)
+    np.savez(os.path.join(fold_dir, 'foldwise_data_bal.npz'), X=X_tr_bal, y=y_tr_bal)
+
+    # Fit the model
+    save_path = os.path.join(fold_dir, 'nn_fold%d.model' % fold_cntr)
     _, history, _ = fit_nn_model(lr0, h1, bsz, verbose=0, cp_path=save_path)
     histories.append(history)
 
+    # Load the best model and predict
     model = load_model(save_path)
     y_pred_va = model.predict(X_va)[:, 0]
     print_scorecard(y_va, y_pred_va > p_thresh, title='VALIDATION')
