@@ -187,3 +187,25 @@ pu.print_negatives(y_tr, y_pred_aft_tr > 0.5, c_tr, ytids=ids_tr, num_secs=s_tr)
 
 pu.print_scorecard(y_va, y_pred_aft_va > 0.5, title='VALIDATION')
 pu.print_negatives(y_va, y_pred_aft_va > 0.5, c_va, ytids=ids_va, num_secs=s_va)
+
+
+# We do not see much difference in prediction capabilities after "fine-tuning", so it
+# must be well-trained already. This is despite implicit hyperparameter search on learning
+# rate, batch size, etc.
+
+# The best improvement comes simply from taking a different confidence threshold:
+y_pred_tr = y_pred_aft_tr
+y_pred_va = y_pred_aft_va
+print('Confidence on true positives:')
+print(y_pred_tr[np.where((y_tr==1) & (y_pred_tr > 0.5))[0]])
+print(y_pred_va[np.where((y_va==1) & (y_pred_va > 0.5))[0]])
+print('Confidence on false positives:')
+print(y_pred_tr[np.where((y_tr==0) & (y_pred_tr > 0.5))[0]])
+print(y_pred_va[np.where((y_va==0) & (y_pred_va > 0.5))[0]])
+
+# On this evidence, 0.9 is a very reasonable threshold to achieve the best performance!
+pu.print_scorecard(y_tr, y_pred_tr > 0.9, title='TRAIN')
+pu.print_negatives(y_tr, y_pred_tr > 0.9, c_tr, ytids=ids_tr, num_secs=s_tr)
+
+pu.print_scorecard(y_va, y_pred_va > 0.9, title='VALIDATION')
+pu.print_negatives(y_va, y_pred_va > 0.9, c_va, ytids=ids_va, num_secs=s_va)
