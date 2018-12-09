@@ -8,6 +8,7 @@ Created on Sat Dec  8 21:32:49 2018
 ## Imports ##
 
 import os
+import numpy as np
 import tensorflow as tf
 import vggish_slim
 import vggish_params as params
@@ -19,11 +20,22 @@ from keras.optimizers import Adam
 
 ## Constants ##
 
-VGGISH_DIR= os.path.join(os.path.expanduser('~'), 'tf-models','research','audioset')
+VGGISH_DIR = os.path.join(os.path.expanduser('~'), 'tf-models','research','audioset') # TODO: at setup
 checkpoint_path = os.path.join(VGGISH_DIR, 'vggish_model.ckpt')
+
+# The fold to concentrate on: see models_with_embedding.py
+FOLD_NUM = 3
+DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data', 'fold%d' % FOLD_NUM)
 
 
 ## Main ##
+
+# Load training and val set for this fold
+data_tr = np.load(os.path.join(DATA_DIR, 'foldwise_data_bal.npz'))
+X_tr_bal, y_tr_bal = data_tr['X'], data_tr['y']
+data_va = np.load(os.path.join(DATA_DIR, 'foldwise_data_va.npz'))
+X_va, y_va, c_va, s_va, ids_va = data_va['X'], data_va['y'], data_va['c'], data_va['s'], data_va['i']
+
 
 # Extract the VGGish variables from the checkpoint file
 with tf.Graph().as_default(), tf.Session() as session:
