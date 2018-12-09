@@ -141,6 +141,22 @@ classify = lyr.Dense(1, activation=a_cfy, name='classify')
 vggish.add(classify)
 classify.set_weights(model_head.get_layer('classify').get_weights())
 
-optzr = SGD(lr=params.LEARNING_RATE/10)
-vggish.compile(optzr, loss='binary_crossentropy')
+# Compile the model (which checks whether all the weights are comensurate)
+optzr = SGD(lr=params.LEARNING_RATE/10, decay=1e-6)
+vggish.compile(optzr, loss='binary_crossentropy', metrics=['accuracy'])
+
+# Use class weights this time (as it reduces training time compared with SMOTE)
+c_wts = {0: sum(y_tr)/sum(y_tr == 0), 1: 1}
+
+# Reshape to a 4D tensor (expected shape)
+L_tr = L_tr[:,:,:,None]
+L_va = L_va[:,:,:,None]
+
+# Fine-tune the model
+history = vggish.fit(L_tr, y_tr,
+                      epochs=1, batch_size=64,
+                      validation_data=(L_va, y_va),
+                      class_weight=c_wts,
+                      verbose=1,
+                    )
 
