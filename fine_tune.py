@@ -13,7 +13,7 @@ import tensorflow as tf
 import vggish_slim
 import vggish_params as params
 
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras import layers as lyr
 from keras.optimizers import Adam
 
@@ -94,7 +94,20 @@ vggish.add(fc1_2)
 fc2    = lyr.Dense(params.EMBEDDING_SIZE, activation='relu', name='fc2')
 vggish.add(fc2)
 
-# TODO: add another Dense layer corresponding to the new binary classification task
+# Load keras model representing the final part of classification task
+model_head = load_model(os.path.join(DATA_DIR, 'nn_fold3.model'))
+
+# Make a copy of fc_last layer, then add it to vggish
+h_last = model_head.get_layer('fc_last').output_shape[-1]
+a_last = model_head.get_layer('fc_last').activation
+fc_last= lyr.Dense(h_last, activation=a_last, name='fc_last')
+# We need to set the weights, but will do that below
+vggish.add(fc_last)
+
+# Make a copy of fc_last layer, then add it to vggish
+a_cfy = model_head.get_layer('classify').activation
+classify = lyr.Dense(1, activation=a_cfy, name='classify')
+vggish.add(classify)
 
 optzr  = Adam(lr=0.00000001) # TODO: make this appropriate, esp. lr
 vggish.compile(optzr, loss='binary_crossentropy')
