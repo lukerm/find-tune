@@ -206,14 +206,13 @@ pu.print_scorecard(y_va, y_pred_va > p_thresh, title='VALIDATION')
 
 
 # More rigorous test: use cross-validation, 5-folds
-# When I run this, the validation sets on fold 0 seems to be the 'hardest', as it lets false positives
-# from the categories: 'Wind Chime', 'Glockenspiel', 'Jingle bell'
+# Again, perfect scorecards for each fold - shuffling is important for diversity of training data!
 print('\n')
 print('=== Neural network classifier (5-fold CV) ===')
 print()
 histories = []
 fold_cntr = 0
-skf = StratifiedKFold(5, random_state=2018)
+skf = StratifiedKFold(5, shuffle=True, random_state=2018)
 for i_tr, i_va in skf.split(X, y):
 
     # Storage for data / models relating to this fold
