@@ -72,6 +72,7 @@ def print_negatives(y_true, y_pred, categories, ytids=None, num_secs=None):
 
 
 ## Main ##
+print('=== Preparing data ===')
 
 # Load data from file
 data = np.load(os.path.join(DATA_DIR, 'embedding_data.npz'))
@@ -132,6 +133,9 @@ X_va = ss.transform(X_va)
 
 
 ## Linear classifier ##
+print('\n')
+print('=== Linear classifier ===')
+print()
 # Yields accuracy and perfect recall on positive class
 # Suffers from imperfect precision on positive class (gives false positives)
 # TODO: investigate changing balance between precision / recall by tweaking classification threshold
@@ -156,6 +160,9 @@ print_negatives(y_va, y_pred_va, c_va, ytids=ids_va, num_secs=s_va)
 
 
 ## Random Forest ##
+print('\n')
+print('=== Random forest classifier ===')
+print()
 # Performs quite well, good accuracy
 # Perfect precision on positive class (desirable: don't want false positives)
 # Note: overfits without cap on depth
@@ -175,6 +182,9 @@ print_negatives(y_va, y_pred_va, c_va, ytids=ids_va, num_secs=s_va)
 
 
 ## Dense Neural Network ##
+print('\n')
+print('=== Neural network classifier ===')
+print()
 # Without any hyperparameter tuning, the network gets a perfect score on all metrics!
 
 def fit_nn_model(lr0, h1, bsz, verbose=0, cp_path=None):
@@ -232,6 +242,9 @@ print_scorecard(y_va, y_pred_va > p_thresh, title='VALIDATION')
 
 
 # More rigorous test: use cross-validation, 5-folds
+print('\n')
+print('=== Neural network classifier (5-fold CV) ===')
+print()
 histories = []
 fold_cntr = 0
 skf = StratifiedKFold(5, random_state=2018)
