@@ -15,7 +15,7 @@ import vggish_params as params
 
 from keras.models import Sequential, load_model
 from keras import layers as lyr
-from keras.optimizers import Adam
+from keras.optimizers import SGD
 
 
 ## Constants ##
@@ -141,6 +141,6 @@ classify = lyr.Dense(1, activation=a_cfy, name='classify')
 vggish.add(classify)
 classify.set_weights(model_head.get_layer('classify').get_weights())
 
-optzr  = Adam(lr=0.00000001) # TODO: make this appropriate, esp. lr
+optzr = SGD(lr=params.LEARNING_RATE/10)
 vggish.compile(optzr, loss='binary_crossentropy')
 
