@@ -44,6 +44,7 @@ with tf.Graph().as_default(), tf.Session() as session:
 
 
 # Reconstruct the network in Keras notation
+# See: https://stackoverflow.com/questions/44466066/how-can-i-convert-a-trained-tensorflow-model-to-keras/53638524#53638524
 # For network definition, see vggish_slim.define_vggish_slim
 vggish = Sequential()
 conv1  = lyr.Conv2D(filters=64, kernel_size=(3,3), strides=1, padding='same', activation='relu', name='conv1',
