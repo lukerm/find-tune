@@ -249,8 +249,8 @@ for i_tr, i_va in skf.split(X, y):
         pickle.dump(ss, f)
 
     # Save data (with input scaled features) for later reference
-    np.savez(os.path.join(fold_dir, 'foldwise_data_tr.npz'), X=X_tr, y=y_tr, c=c_tr, s=s_tr, i=i_tr)
-    np.savez(os.path.join(fold_dir, 'foldwise_data_va.npz'), X=X_va, y=y_va, c=c_va, s=s_va, i=i_va)
+    np.savez(os.path.join(fold_dir, 'foldwise_data_tr.npz'), X=X_tr, y=y_tr, c=c_tr, s=s_tr, i=ids_tr)
+    np.savez(os.path.join(fold_dir, 'foldwise_data_va.npz'), X=X_va, y=y_va, c=c_va, s=s_va, i=ids_va)
     np.savez(os.path.join(fold_dir, 'foldwise_data_bal.npz'), X=X_tr_bal, y=y_tr_bal)
 
     # Fit the model
