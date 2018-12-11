@@ -11,3 +11,4 @@ resampy
 # https://www.piwheels.org
 tensorflow
 keras
+h5py
