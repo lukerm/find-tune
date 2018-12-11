@@ -3,9 +3,11 @@ numpy
 pandas
 sklearn
 imblearn
-tensorflow
-keras
 PyAudio>=0.2.11
-seaborn>=0.9.0
+#seaborn>=0.9.0 # only for notebooks
 scipy
 resampy
+# For installation of tf on Raspbian, see:
+# https://www.piwheels.org
+tensorflow
+keras
