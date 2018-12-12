@@ -10,5 +10,4 @@ resampy
 # For installation of tf on Raspbian, see:
 # https://www.piwheels.org
 tensorflow
-keras
-h5py
+keras==2.2.4
