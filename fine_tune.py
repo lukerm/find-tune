@@ -219,3 +219,22 @@ vggish.save_weights(os.path.join(DATA_DIR, 'my_vggish_network.h5')) # Weights a 
 model_dict = json.loads(vggish.to_json()) # Architecture as JSON
 with open(os.path.join(DATA_DIR, 'my_vggish_network.json'), 'w') as j:
     json.dump(model_dict, j)
+
+# Save weights layer-by-layer (for less memory-intensive loading later down the line)
+layer_loc = {}
+os.makedirs(os.path.join(DATA_DIR, 'layers'), exist_ok=True)
+for lyr in vggish.layers:
+    fname = os.path.join(DATA_DIR, 'layers', '%s.npz' % lyr.name)
+    wts   = lyr.get_weights()
+    if len(wts) > 0:
+        assert len(wts) == 2
+        w, b = wts
+    else:
+        continue
+
+    np.savez(fname, w=w, b=b)
+    layer_loc[lyr.name] = os.path.join('layers', lyr.name)
+
+# Filepaths of the layer's weights
+with open(os.path.join(DATA_DIR, 'layers', 'layer_loc.json'), 'w') as j:
+    json.dump(layer_loc, j)
