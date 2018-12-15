@@ -10,13 +10,13 @@ class LightLoadInitializer(Initializer):
         self.weights_dir= weights_dir
 
     def __call__(self, shape=None, dtype=None):
-        wts = np.load(os.path.join(self.weights_dir, '%s.npz' % self.layer_name))
-        w, b= wts['w'], wts['b']
         # Return a Tensor, with the same values as the weights / biases
         if self.bias:
-            return K.variable(val=b)
+            biases = np.load(os.path.join(self.weights_dir, '%s_biases.npy' % self.layer_name))
+            return K.variable(value=biases)
         else:
-            return K.variable(val=w)
+            weights = np.load(os.path.join(self.weights_dir, '%s_weights.npy' % self.layer_name))
+            return K.variable(value=weights)
 
     def get_config(self):
         return {
