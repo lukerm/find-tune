@@ -1,5 +1,6 @@
 import os
 import numpy as np
+from keras import backend as K
 from keras.initializers import Initializer
 
 class LightLoadInitializer(Initializer):
@@ -11,11 +12,11 @@ class LightLoadInitializer(Initializer):
     def __call__(self, shape=None, dtype=None):
         wts = np.load(os.path.join(self.weights_dir), '%s.npz' % layer_name)
         w, b= wts['w'], wts['b']
-        # TODO: return Tensor, with the same values
-        if bias:
-            return b
+        # Return a Tensor, with the same values as the weights / biases
+        if self.bias:
+            return K.variable(val=b)
         else:
-            return w
+            return K.variable(val=w)
 
     def get_config(self):
         return {
