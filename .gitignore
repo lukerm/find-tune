@@ -6,6 +6,7 @@
 !data/non-target_categories.txt
 !requirements.txt
 *.csv
+*.npy
 *.npz
 *.pkl
 .ipynb_checkpoints/*
