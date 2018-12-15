@@ -10,7 +10,7 @@ class LightLoadInitializer(Initializer):
         self.weights_dir= weights_dir
 
     def __call__(self, shape=None, dtype=None):
-        wts = np.load(os.path.join(self.weights_dir), '%s.npz' % layer_name)
+        wts = np.load(os.path.join(self.weights_dir, '%s.npz' % self.layer_name))
         w, b= wts['w'], wts['b']
         # Return a Tensor, with the same values as the weights / biases
         if self.bias:
