@@ -221,20 +221,14 @@ with open(os.path.join(DATA_DIR, 'my_vggish_network.json'), 'w') as j:
     json.dump(model_dict, j)
 
 # Save weights layer-by-layer (for less memory-intensive loading later down the line)
-layer_loc = {}
-os.makedirs(os.path.join(DATA_DIR, 'layers'), exist_ok=True)
+layer_path = os.path.join(DATA_DIR, 'layers')
+os.makedirs(layer_path, exist_ok=True)
 for lyr in vggish.layers:
-    fname = os.path.join(DATA_DIR, 'layers', '%s.npz' % lyr.name)
-    wts   = lyr.get_weights()
+    wts = lyr.get_weights()
     if len(wts) > 0:
         assert len(wts) == 2
         w, b = wts
+        np.save(os.path.join(layer_path, '%s_weights.npy' % lyr.name), w)
+        np.save(os.path.join(layer_path, '%s_biases.npy'  % lyr.name), b)
     else:
         continue
-
-    np.savez(fname, w=w, b=b)
-    layer_loc[lyr.name] = os.path.join('layers', lyr.name)
-
-# Filepaths of the layer's weights
-with open(os.path.join(DATA_DIR, 'layers', 'layer_loc.json'), 'w') as j:
-    json.dump(layer_loc, j)
