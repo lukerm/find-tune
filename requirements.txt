@@ -4,6 +4,7 @@ pandas
 sklearn
 imblearn
 PyAudio>=0.2.11
+soundfile
 #seaborn>=0.9.0 # only for notebooks
 scipy
 resampy
