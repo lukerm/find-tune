@@ -1,8 +1,3 @@
-# Requirements
-sudo python3 -m pip install numpy scipy
-sudo python3 -m pip install resampy tensorflow six
-sudo python3 -m pip install soundfile
-
 # Clone tensorflow's repo (approx 0.5GB)
 git clone git@github.com:tensorflow/models.git ~/tf-models
 cd ~/tf-models/research/audioset
