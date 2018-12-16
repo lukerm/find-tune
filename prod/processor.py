@@ -15,6 +15,7 @@ import os
 import json
 import numpy as np
 from keras.models import model_from_json
+from prod.initialize import LightLoadInitializer
 
 import vggish_input
 
@@ -45,21 +46,18 @@ class WavProcessor(object):
     def __init__(self, data_dir=os.path.join(os.path.expanduser('~'), 'find-tune', 'data'), low_memory=True):
         # TODO: fix path
 
-        # Load architecture
-        with open(os.path.join(data_dir, 'my_vggish_network.json'), 'r') as j:
-            model_dict = json.load(j)
-        vggish = model_from_json(json.dumps(model_dict))
-        
         # Load weights (for low-memory devices, it helps to go layer-by-layer)
         if low_memory:
-            # Where each layer's weights are stored on disk
-            with open(os.path.join(DATA_DIR, 'layers', 'layer_loc.json'), 'r') as j:
-                layer_loc = json.load(j)
-            for lyr, fp in layer_loc.items():
-                wts  = np.load(os.path.join(DATA_DIR, fp))
-                w, b = wts['w'], wts['b']
-                vggish.get_layer(lyr).set_weights([w,b])
+            with open(os.path.join(DATA_DIR, 'my_vggish_network_lite.json'), 'r') as j:
+                model_dict = json.load(j)
+            vggish = model_from_json(
+                         json_string = json.dumps(model_dict),
+                         custom_objects = {'LightLoadInitializer': LightLoadInitializer}
+                     )
         else:
+            with open(os.path.join(DATA_DIR, 'my_vggish_network.json'), 'r') as j:
+                model_dict = json.load(j)
+            vggish = model_from_json(json.dumps(model_dict))
             vggish.load_weights(os.path.join(data_dir, 'my_vggish_network.h5'))
 
         self._tuned_vggish = vggish
