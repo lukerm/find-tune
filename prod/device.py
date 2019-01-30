@@ -9,11 +9,13 @@ __all__ = ['AudioDevice']
 class AudioDevice(object):
     def __init__(self):
         self.pa = pyaudio.PyAudio()
+        self.sample_rate = int(self.pa.get_default_input_device_info()['defaultSampleRate'])
+
         self.in_stream = self.pa.open(format=pyaudio.paInt16, channels=1,
-                                      rate=16000, input=True)
+                                      rate=self.sample_rate, input=True)
         self.in_stream.start_stream()
         self.out_stream = self.pa.open(format=pyaudio.paInt16, channels=1,
-                                       rate=16000, output=True)
+                                       rate=self.sample_rate, output=True)
         self.out_stream.start_stream()
 
     def close(self):
