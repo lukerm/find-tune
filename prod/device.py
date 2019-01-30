@@ -27,7 +27,9 @@ class AudioDevice(object):
         return self.out_stream.write(b)
 
     def read(self, n):
-        return self.in_stream.read(n)
+        # As it's not essential to capture every byte of sound in the buffer,
+        # we'll turn off the overflow feature
+        return self.in_stream.read(n, exception_on_overflow=False)
 
     def flush(self):
         pass
