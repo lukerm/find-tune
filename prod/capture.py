@@ -33,7 +33,6 @@ class Capture(object):
     _save_path = None
     _processor_sleep_time = 0.01
     _process_buf = None
-    _sample_rate = 16000
 
     def __init__(self, min_time, max_time, path=None):
         if path is not None:
@@ -45,6 +44,8 @@ class Capture(object):
         self._save_path = path
         self._ask_data = threading.Event()
         self._captor = Captor(min_time, max_time, self._ask_data, self._process)
+        # Sample rate from the AudioDevice within Captor
+        self._sample_rate = self._captor.audio_device.sample_rate
 
     def start(self):
         self._captor.start()

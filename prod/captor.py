@@ -17,8 +17,6 @@ class Captor(object):
     It waiting till "ask_data_event" is set and then call "callback" as soon as
     data ready
     """
-    _sample_rate = 16000
-    _capture_rate = _sample_rate*2  # bytes per second
     _ask_data_event = None
     _shutdown_event = None
     _capture_thread = None
@@ -49,6 +47,10 @@ class Captor(object):
         self._shutdown_event = shutdown_event
         self._callback = callback
 
+        # Obtain sample rate from the AudioDevice
+        self.audio_device = AudioDevice()
+        self._sample_rate = self.audio_device.sample_rate
+        self._capture_rate= self._sample_rate*2  # bytes per second
         self._min_data = self._min_time*self._capture_rate
         self._max_data = self._max_time*self._capture_rate
 
@@ -68,7 +70,6 @@ class Captor(object):
         Capture loop
         :return:
         """
-        ad = AudioDevice()
         capture_buf = bytes()
 
         logger.info('Start recording.')
@@ -78,7 +79,7 @@ class Captor(object):
                 self._callback(capture_buf)
                 capture_buf = bytes()
 
-            buf = ad.read(self._sample_rate)
+            buf = self.audio_device.read(self._sample_rate)
             if buf is None:
                 logger.debug('Buffer is empty.')
                 return
