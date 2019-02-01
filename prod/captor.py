@@ -54,8 +54,7 @@ class Captor(object):
         self._min_data = self._min_time*self._capture_rate
         self._max_data = self._max_time*self._capture_rate
 
-        self._capture_thread = threading.Thread(target=self._capture,
-                                                name='captor')
+        self._capture_thread = threading.Thread(target=self._capture, name='captor')
         self._capture_thread.setDaemon(True)
 
     def start(self):

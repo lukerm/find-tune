@@ -6,6 +6,7 @@ import threading
 import time
 import os
 import numpy as np
+
 from scipy.io import wavfile
 from log_config import LOGGING
 
@@ -72,11 +73,8 @@ class Capture(object):
                     logger.info('"{}" saved.'.format(f_path))
 
                 logger.info('Start processing.')
-                predictions = proc.get_predictions(
-                    self._sample_rate, self._process_buf)
-                logger.info(
-                    'Predictions: {}'.format(format_predictions(predictions))
-                )
+                predictions = proc.get_predictions(self._sample_rate, self._process_buf)
+                logger.info('Predictions: {}'.format(format_predictions(predictions)))
 
                 logger.info('Stop processing.')
                 self._process_buf = None
