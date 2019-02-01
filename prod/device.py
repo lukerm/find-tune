@@ -12,7 +12,7 @@ class AudioDevice(object):
         self.sample_rate = int(self.pa.get_default_input_device_info()['defaultSampleRate'])
 
         self.in_stream = self.pa.open(format=pyaudio.paInt16, channels=1,
-                                      rate=self.sample_rate, input=True)
+                                      rate=self.sample_rate, input=True, frames_per_buffer=self.sample_rate)
         self.in_stream.start_stream()
         self.out_stream = self.pa.open(format=pyaudio.paInt16, channels=1,
                                        rate=self.sample_rate, output=True)
