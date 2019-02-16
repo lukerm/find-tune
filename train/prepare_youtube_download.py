@@ -1,5 +1,6 @@
 ## Imports ##
 
+import os
 import re
 import json
 
@@ -9,6 +10,7 @@ import json
 # Take more than one per category, just in case it fails
 N_TRACKS_PER_CAT = 2
 
+DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
 
 ## Functions ##
 
@@ -39,11 +41,11 @@ def parse_youtube_url(url):
 ## Main ## 
 
 # Load the ontology, to seek examples
-with open('data/ontology.json', 'r') as f:
+with open(os.path.join(DATA_DIR, 'ontology.json'), 'r') as f:
     ontology = json.load(f)
 
 # Open the list of categories we think are relevant counter-examples (non-target noises)
-with open('data/non-target_categories.txt', 'r') as f:
+with open(os.path.join(DATA_DIR, 'non-target_categories.txt'), 'r') as f:
     sound_cats = f.readlines()
 
 # Process each of the categories, writing and parsing the first URLs
@@ -72,7 +74,7 @@ with open(link_fname, 'w') as f:
 
 
 # Save the parsed URLs to file
-link_detail_fname = 'data/link_details.json'
+link_detail_fname = os.path.join(DATA_DIR, 'link_details.json')
 print('Saving link details to: %s' % link_detail_fname)
 with open(link_detail_fname, 'w') as j:
      json.dump(link_details, j)

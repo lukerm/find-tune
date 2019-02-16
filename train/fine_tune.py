@@ -19,7 +19,7 @@ from keras import layers as lyr
 from keras.optimizers import SGD
 
 import sys
-sys.path.append(os.path.join(os.path.expanduser('~'), 'find-tune')) # TODO: do this during setup
+sys.path.append(os.path.join(os.path.expanduser('~'), 'find-tune', 'train')) # TODO: do this during setup
 import perf_utils as pu
 
 

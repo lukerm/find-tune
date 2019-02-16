@@ -13,7 +13,7 @@ import numpy as np
 np.random.seed(2018)
 
 import sys
-sys.path.append(os.path.join(os.path.expanduser('~'), 'find-tune')) # TODO: do this during setup
+sys.path.append(os.path.join(os.path.expanduser('~'), 'find-tune', 'train')) # TODO: do this during setup
 import perf_utils as pu
 
 from imblearn.over_sampling import SMOTE
