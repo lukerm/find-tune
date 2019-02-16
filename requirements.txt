@@ -5,7 +5,7 @@ sklearn
 imblearn
 PyAudio>=0.2.11
 soundfile
-#seaborn>=0.9.0 # only for notebooks
+seaborn>=0.9.0 # only for notebooks
 scipy
 # For installation of tf on Raspbian, see:
 # https://www.piwheels.org
