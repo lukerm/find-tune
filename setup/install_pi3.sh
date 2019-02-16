@@ -4,7 +4,6 @@
 # https://iotbytes.wordpress.com/connect-configure-and-test-usb-microphone-and-speaker-with-raspberry-pi/
 # Please check configuration before copying blindly
 arecord -l
-#sudo cp ~/find-tune/asound.cnf /etc/asound.cnf
 
 sudo apt-get install libportaudio2 portaudio19-dev
 sudo apt-get install libatlas-base-dev
