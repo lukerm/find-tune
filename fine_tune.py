@@ -111,7 +111,7 @@ conv4_2.trainable = False
 pool4  = lyr.MaxPooling2D(pool_size=(2,2), strides=2, name='pool4')
 vggish.add(pool4)
 
-vggish.add(lyr.Flatten()) # TODO: check channels_first or _last
+vggish.add(lyr.Flatten())
 
 fc1_1  = lyr.Dense(4096, activation='relu', name='fc1_1')
 vggish.add(fc1_1)
@@ -220,15 +220,3 @@ model_dict = json.loads(vggish.to_json()) # Architecture as JSON
 with open(os.path.join(DATA_DIR, 'my_vggish_network.json'), 'w') as j:
     json.dump(model_dict, j)
 
-# Save weights layer-by-layer (for less memory-intensive loading later down the line)
-layer_path = os.path.join(DATA_DIR, 'layers')
-os.makedirs(layer_path, exist_ok=True)
-for lyr in vggish.layers:
-    wts = lyr.get_weights()
-    if len(wts) > 0:
-        assert len(wts) == 2
-        w, b = wts
-        np.save(os.path.join(layer_path, '%s_weights.npy' % lyr.name), w)
-        np.save(os.path.join(layer_path, '%s_biases.npy'  % lyr.name), b)
-    else:
-        continue
