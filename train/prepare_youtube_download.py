@@ -4,13 +4,14 @@ import os
 import re
 import json
 
+from definitions import DATA_DIR
 
-## Constants ## 
+
+## Constants ##
 
 # Take more than one per category, just in case it fails
 N_TRACKS_PER_CAT = 2
 
-DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
 
 ## Functions ##
 

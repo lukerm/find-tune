@@ -14,6 +14,8 @@ import vggish_slim
 
 import numpy as np
 
+from definitions import DATA_DIR
+
 
 ## Constants ##
 
@@ -23,8 +25,7 @@ VGGISH_DIR= os.path.join(os.path.expanduser('~'), 'tf-models','research','audios
 checkpoint_path = os.path.join(VGGISH_DIR, 'vggish_model.ckpt')
 pca_params_path = os.path.join(VGGISH_DIR, 'vggish_pca_params.npz')
 
-# Paths to data files
-DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
+# Paths to YouTube sound data files
 YT8M_DIR = os.path.join(DATA_DIR, 'youtube_clip')
 
 
