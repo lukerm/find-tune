@@ -18,7 +18,7 @@ from keras.models import Sequential, load_model
 from keras import layers as lyr
 from keras.optimizers import SGD
 
-from definitions import DATA_DIR
+from definitions import DATA_DIR, VGGISH_DIR
 
 import sys
 sys.path.append(os.path.join(os.path.expanduser('~'), 'find-tune', 'train')) # TODO: do this during setup
@@ -27,7 +27,6 @@ import perf_utils as pu
 
 ## Constants ##
 
-VGGISH_DIR = os.path.join(os.path.expanduser('~'), 'tf-models','research','audioset') # TODO: at setup
 checkpoint_path = os.path.join(VGGISH_DIR, 'vggish_model.ckpt')
 
 # The fold to concentrate on: see models_with_embedding.py

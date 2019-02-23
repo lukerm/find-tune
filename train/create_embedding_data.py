@@ -14,14 +14,12 @@ import vggish_slim
 
 import numpy as np
 
-from definitions import DATA_DIR
+from definitions import DATA_DIR, VGGISH_DIR
 
 
 ## Constants ##
 
 # Paths to downloaded VGGish files
-# TODO: fix path
-VGGISH_DIR= os.path.join(os.path.expanduser('~'), 'tf-models','research','audioset')
 checkpoint_path = os.path.join(VGGISH_DIR, 'vggish_model.ckpt')
 pca_params_path = os.path.join(VGGISH_DIR, 'vggish_pca_params.npz')
 
