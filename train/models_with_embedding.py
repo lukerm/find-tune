@@ -194,7 +194,7 @@ lr0 = 0.01
 h1  = 128
 bsz = 64
 
-model, history, _ = fit_nn_model(lr0, h1, bsz, verbose=2)
+model, history, _ = fit_nn_model(lr0, h1, bsz, verbose=0)
 
 # Make (probability) predictions
 y_pred_tr_bal = model.predict(X_tr_bal)[:, 0]
@@ -237,7 +237,7 @@ for i_tr, i_va in skf.split(X, y):
     L_va = L[i_va, :, :]
 
     print('FOLD %d' % fold_cntr)
-    print('=======')
+    print('======')
     print()
     print('Positive labels in training set:   %d' % y_tr.sum())
     print('Positive labels in validation set: %d' % y_va.sum())
