@@ -7,11 +7,10 @@ arecord -l
 # If the microphone is too quiet, this guide might help:
 # http://wiki.sunfounder.cc/index.php?title=To_use_USB_mini_microphone_on_Raspbian
 
-sudo apt-get install libportaudio2 portaudio19-dev
-sudo apt-get install libatlas-base-dev
+sudo apt install libatlas-base-dev
 
-sudo apt-get install cmake
-sudo apt-get install libedit-dev
+sudo apt install cmake
+sudo apt install libedit-dev
 
 # Install llvmlite from source (it's a bit painful, but steps mapped out below)
 # Using install guide: https://llvmlite.readthedocs.io/en/latest/admin-guide/install.html
