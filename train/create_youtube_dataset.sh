@@ -1,8 +1,5 @@
 # This bash script walks through the steps required to prepare the audio features (from VGGish model)
-# from the sound bites downloaded from YouTube. Please ensure install_youtube-dl.sh has been executed.
-
-# Please also ensure ffmpeg is installed, as it is used later. To do so (not run):
-# sudo apt-get install ffmpeg
+# from the sound bites downloaded from YouTube. Please ensure setup/install_youtube-dl.sh has been executed.
 
 # Prepare the list of audio files to download from YouTube
 # Output files: data/dl_youtube_links.txt data/link_details.json
