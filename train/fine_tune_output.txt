@@ -1,0 +1,110 @@
+Train on 2688 samples, validate on 674 samples
+Epoch 1/1
+ - 54s - loss: 8.7058e-05 - acc: 0.9985 - val_loss: 0.0127 - val_acc: 0.9985
+BEFORE TUNING:
+
+TRAIN:
+Accuracy: 0.999
+precision: [1.000, 0.833]
+recall:    [0.999, 1.000]
+f_beta:    [0.999, 0.909]
+support:   [2668.000, 20.000]
+
+Number of false positives: 4
+['Glockenspiel' 'Glockenspiel' 'Jingle bell' 'Doorbell']
+Number of false negatives: 0
+[]
+
+False positive IDs:
+Video ID: 66B8oYpHKfc (7s due to Glockenspiel)
+Video ID: 66B8oYpHKfc (9s due to Glockenspiel)
+Video ID: TWQXP_v8opY (7s due to Jingle bell)
+Video ID: _oiZ9F6EVtw (7s due to Doorbell)
+VALIDATION:
+Accuracy: 0.999
+precision: [1.000, 0.857]
+recall:    [0.999, 1.000]
+f_beta:    [0.999, 0.923]
+support:   [668.000, 6.000]
+
+Number of false positives: 1
+['Jingle bell']
+Number of false negatives: 0
+[]
+
+False positive IDs:
+Video ID: TWQXP_v8opY (10s due to Jingle bell)
+AFTER TUNING:
+
+TRAIN:
+Accuracy: 0.999
+precision: [1.000, 0.833]
+recall:    [0.999, 1.000]
+f_beta:    [0.999, 0.909]
+support:   [2668.000, 20.000]
+
+Number of false positives: 4
+['Glockenspiel' 'Glockenspiel' 'Jingle bell' 'Doorbell']
+Number of false negatives: 0
+[]
+
+False positive IDs:
+Video ID: 66B8oYpHKfc (7s due to Glockenspiel)
+Video ID: 66B8oYpHKfc (9s due to Glockenspiel)
+Video ID: TWQXP_v8opY (7s due to Jingle bell)
+Video ID: _oiZ9F6EVtw (7s due to Doorbell)
+VALIDATION:
+Accuracy: 0.999
+precision: [1.000, 0.857]
+recall:    [0.999, 1.000]
+f_beta:    [0.999, 0.923]
+support:   [668.000, 6.000]
+
+Number of false positives: 1
+['Jingle bell']
+Number of false negatives: 0
+[]
+
+False positive IDs:
+Video ID: TWQXP_v8opY (10s due to Jingle bell)
+
+Effect of thresholding probability
+
+Confidence on true positives:
+[0.9985689  0.9990766  0.99805754 0.99908364 0.9996025  0.9995554
+ 0.99937063 0.9968746  0.9961976  0.9991049  0.9995473  0.9989196
+ 0.9976186  0.99831545 0.9961397  0.9976313  0.9976248  0.9978988
+ 0.9968773  0.99948585]
+[0.9991856  0.9968719  0.99729055 0.99828196 0.99908185 0.9782194 ]
+Confidence on false positives:
+[0.5071095  0.5259254  0.6802116  0.59999615]
+[0.554328]
+Use threshold: 0.90
+
+TRAIN:
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [2668.000, 20.000]
+
+Number of false positives: 0
+[]
+Number of false negatives: 0
+[]
+
+VALIDATION:
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [668.000, 6.000]
+
+Number of false positives: 0
+[]
+Number of false negatives: 0
+[]
+
+
+Saving model ...
+done
