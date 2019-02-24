@@ -1,8 +1,7 @@
 import os
 import json
 from keras.models import load_model, model_from_json
-
-DATA_DIR = '../data'
+from definitions import DATA_DIR
 
 with open(os.path.join(DATA_DIR, 'my_vggish_network.json'), 'r') as j:
     model_dict = json.load(j)

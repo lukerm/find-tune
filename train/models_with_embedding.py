@@ -28,10 +28,7 @@ from keras.models import Model, load_model
 from keras.optimizers import Adam
 from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
 
-
-## Constants ##
-
-DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
+from definitions import DATA_DIR
 
 
 ## Main ##

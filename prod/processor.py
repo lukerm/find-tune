@@ -19,6 +19,8 @@ from keras.models import model_from_json
 import vggish_input
 import vggish_params as params
 
+from definitions import DATA_DIR
+
 
 ## Constants ##
 
@@ -27,7 +29,7 @@ P_THRESH = 0.9
 
 __all__ = ['WavProcessor', 'format_predictions']
 
-
+# TODO: mark for removal
 cwd = os.path.dirname(os.path.realpath(__file__))
 
 
@@ -43,7 +45,7 @@ class WavProcessor(object):
 
     _tuned_vggish = None
 
-    def __init__(self, data_dir=os.path.join(os.path.expanduser('~'), 'find-tune', 'data')):
+    def __init__(self, data_dir=DATA_DIR):
         # TODO: fix path
 
         with open(os.path.join(data_dir, 'my_vggish_network.json'), 'r') as j:
