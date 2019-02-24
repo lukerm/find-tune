@@ -7,8 +7,7 @@ PyAudio>=0.2.11
 soundfile
 seaborn>=0.9.0 # only for notebooks
 scipy
-# For installation of tf on Raspbian, see:
-# https://www.piwheels.org
+# For installation of tensorflow on Raspbian, see: https://www.piwheels.org
 tensorflow
 keras==2.2.4
 numba>=0.32

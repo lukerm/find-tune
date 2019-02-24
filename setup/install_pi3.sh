@@ -4,6 +4,8 @@
 # https://iotbytes.wordpress.com/connect-configure-and-test-usb-microphone-and-speaker-with-raspberry-pi/
 # Please check configuration before copying blindly
 arecord -l
+# If the microphone is too quiet, this guide might help:
+# http://wiki.sunfounder.cc/index.php?title=To_use_USB_mini_microphone_on_Raspbian
 
 sudo apt-get install libportaudio2 portaudio19-dev
 sudo apt-get install libatlas-base-dev
