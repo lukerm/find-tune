@@ -53,7 +53,7 @@ with open(os.path.join(DATA_DIR, 'non-target_categories.txt'), 'r') as f:
 link_details = {}
 n_cats  = 0
 n_links = 0
-link_fname = 'data/dl_youtube_links.txt'
+link_fname = os.path.join(DATA_DIR, 'dl_youtube_links.txt')
 with open(link_fname, 'w') as f: 
     print('Saving links to: %s' % link_fname)
     for cat in sound_cats:
