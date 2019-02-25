@@ -25,7 +25,7 @@ I use a neural-network based architecture to solve this problem, in particular t
 600 categories) as a warm start, before fine-tuning to this task. (The unusual name takes inspiration from the network architecture 
 designed by the Visual Geometry Group (VGG) of the University of Oxford for their solution to the ImageNet Challenge (computer vision) 
 in 2014.) Google have developed the tools for the pre-processing of sound as well as a TensorFlow model, so 
-(their project)[https://github.com/tensorflow/models/tree/master/research/audioset] is a dependency of this one. Necessarily, I have
+[their project](https://github.com/tensorflow/models/tree/master/research/audioset) is a dependency of this one. Necessarily, I have
 had to derive my own model from theirs which is available to download (see "Installation guide" below). 
 
 There is a lot of cool mathematics connected to sound classification, which you can read more about [here](https://www.iotforall.com/tensorflow-sound-classification-machine-learning-applications/).
