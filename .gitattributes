@@ -1,1 +1,2 @@
 *.ipynb linguist-language=Python
+train/visualize_embedding_data.ipynb linguist-documentation
