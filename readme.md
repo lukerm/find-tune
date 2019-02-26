@@ -58,3 +58,19 @@ If you are going to install this project on a Raspberry Pi, you'll also need to 
 is a catalogue of all of the extra instructions required (but cannot guarantee it). If you do attempt this, please do get in touch, whether
 you succeed or get stuck (e.g. through creating an Issue).
 
+
+## Production
+
+Once you have completed the installation instructions, either for your laptop or Pi, your device should be production-ready.
+Please ensure that your (USB) microphone is turned up. As a first step, you can run `prod/test_load_model.py` to check that the 
+TensorFlow model loads correctly through the Keras interface. 
+
+On a Raspberry Pi, this will fail if you do not have enough swap memory allocated (1GB should be sufficient when 
+[resizing the swap](https://www.bitpi.co/2015/02/11/how-to-change-raspberry-pis-swapfile-size-on-rasbian/)). 
+This is because loading the model's weights is a very memory-intensive process requiring more than the 1GB of RAM available
+on the third-generation device. Even then, it will take several minutes to load the model, and will appear frozen during
+that time, but patience will prevail! Once it has everything loaded you will get a message and the program will exit. 
+
+After that, I recommend moving onto the `prod/capture.py` file which loads the model before capturing, processing and 
+classifying the sound coming through the microphone. It will do that in chunks of about five seconds (configurable), printing its
+predictions to the terminal - please have the target track ready to play in order to check it's working correctly!
