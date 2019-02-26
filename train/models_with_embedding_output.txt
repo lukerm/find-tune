@@ -1,0 +1,286 @@
+=== Preparing data ===
+p: 0.0077
+N: 672
+P(X < 3) = 0.107 (where X ~ Bin(N, p))
+Positive labels in training set:   21
+Positive labels in validation set: 5
+Negative labels in training set:   2690
+Negative labels in validation set: 646
+Positive labels in balanced training set: 2690
+Negative labels in balanced training set: 2690
+
+
+=== Linear classifier ===
+
+alpha = 1e-04
+TRAIN (BAL.):
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [2690.000, 2690.000]
+
+TRAIN:
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [2690.000, 21.000]
+
+VALIDATION:
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [646.000, 5.000]
+
+
+Number of false positives: 0
+[]
+Number of false negatives: 0
+[]
+
+
+
+=== Random forest classifier ===
+
+TRAIN (BAL.):
+Accuracy: 0.982
+precision: [0.965, 1.000]
+recall:    [1.000, 0.963]
+f_beta:    [0.982, 0.981]
+support:   [2690.000, 2690.000]
+
+TRAIN:
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [2690.000, 21.000]
+
+VALIDATION:
+Accuracy: 0.998
+precision: [0.998, 1.000]
+recall:    [1.000, 0.800]
+f_beta:    [0.999, 0.889]
+support:   [646.000, 5.000]
+
+
+Number of false positives: 0
+[]
+Number of false negatives: 1
+['target']
+
+False negative IDs:
+Video ID: target (3s due to target)
+
+
+=== Neural network classifier ===
+
+TRAIN (BAL.):
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [2690.000, 2690.000]
+
+TRAIN:
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [2690.000, 21.000]
+
+VALIDATION:
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [646.000, 5.000]
+
+
+
+=== 5-fold CV ===
+
+FOLD 0
+======
+
+Positive labels in training set:   20
+Positive labels in validation set: 6
+Positive labels in balanced set:   2668
+
+=== Linear classifier ===
+VALIDATION:
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [668.000, 6.000]
+
+Number of false positives: 0
+[]
+Number of false negatives: 0
+[]
+
+
+=== Dense neural network ===
+VALIDATION:
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [668.000, 6.000]
+
+Number of false positives: 0
+[]
+Number of false negatives: 0
+[]
+
+
+FOLD 1
+======
+
+Positive labels in training set:   21
+Positive labels in validation set: 5
+Positive labels in balanced set:   2669
+
+=== Linear classifier ===
+VALIDATION:
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [667.000, 5.000]
+
+Number of false positives: 0
+[]
+Number of false negatives: 0
+[]
+
+
+=== Dense neural network ===
+VALIDATION:
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [667.000, 5.000]
+
+Number of false positives: 0
+[]
+Number of false negatives: 0
+[]
+
+
+FOLD 2
+======
+
+Positive labels in training set:   21
+Positive labels in validation set: 5
+Positive labels in balanced set:   2669
+
+=== Linear classifier ===
+VALIDATION:
+Accuracy: 0.999
+precision: [1.000, 0.833]
+recall:    [0.999, 1.000]
+f_beta:    [0.999, 0.909]
+support:   [667.000, 5.000]
+
+Number of false positives: 1
+['Hubbub, speech noise, speech babble']
+Number of false negatives: 0
+[]
+
+False positive IDs:
+Video ID: 9heeSXrNtXY (8s due to Hubbub, speech noise, speech babble)
+
+=== Dense neural network ===
+VALIDATION:
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [667.000, 5.000]
+
+Number of false positives: 0
+[]
+Number of false negatives: 0
+[]
+
+
+FOLD 3
+======
+
+Positive labels in training set:   21
+Positive labels in validation set: 5
+Positive labels in balanced set:   2669
+
+=== Linear classifier ===
+VALIDATION:
+Accuracy: 0.997
+precision: [1.000, 0.714]
+recall:    [0.997, 1.000]
+f_beta:    [0.998, 0.833]
+support:   [667.000, 5.000]
+
+Number of false positives: 2
+['Wind chime' 'Wind chime']
+Number of false negatives: 0
+[]
+
+False positive IDs:
+Video ID: 1zmAwtZgohE (2s due to Wind chime)
+Video ID: 1zmAwtZgohE (10s due to Wind chime)
+
+=== Dense neural network ===
+VALIDATION:
+Accuracy: 0.999
+precision: [1.000, 0.833]
+recall:    [0.999, 1.000]
+f_beta:    [0.999, 0.909]
+support:   [667.000, 5.000]
+
+Number of false positives: 1
+['Wind chime']
+Number of false negatives: 0
+[]
+
+False positive IDs:
+Video ID: 1zmAwtZgohE (2s due to Wind chime)
+
+FOLD 4
+======
+
+Positive labels in training set:   21
+Positive labels in validation set: 5
+Positive labels in balanced set:   2669
+
+=== Linear classifier ===
+VALIDATION:
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [667.000, 5.000]
+
+Number of false positives: 0
+[]
+Number of false negatives: 0
+[]
+
+
+=== Dense neural network ===
+VALIDATION:
+Accuracy: 1.000
+precision: [1.000, 1.000]
+recall:    [1.000, 1.000]
+f_beta:    [1.000, 1.000]
+support:   [667.000, 5.000]
+
+Number of false positives: 0
+[]
+Number of false negatives: 0
+[]
+
+
