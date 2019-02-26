@@ -19,12 +19,12 @@ The positive sound, the doorbell, is already saved to `data`, but we also need a
 come up against. I've used a selection of sounds from the [ontology](https://github.com/audioset/ontology/blob/master/ontology.json) 
 created by Google's [AudioSet team](https://ai.google/research/pubs/pub45857) to create our own mini corpus of negative examples for this 
 binary classification problem. The sound categories I used are stored in the file `data/non-target_categories.txt`, which is used in
-data creation process. 
+the data creation process. 
 
 I use a neural-network based architecture to solve this problem, in particular the "VGGish" network for sound classification (approx. 
 600 categories) as a warm start, before fine-tuning to this task. (The unusual name takes inspiration from the network architecture 
 designed by the Visual Geometry Group (VGG) of the University of Oxford for their solution to the ImageNet Challenge (computer vision) 
-in 2014.) Google have developed the tools for the pre-processing of sound as well as a TensorFlow model, so 
+in 2014.) Google have developed the tools for the pre-processing of sound as well as a TensorFlow model of VGGish, so 
 [their project](https://github.com/tensorflow/models/tree/master/research/audioset) is a dependency of this one. Necessarily, I have
 had to derive my own model from theirs which is available to download (see "Installation guide" below). 
 
@@ -40,8 +40,8 @@ In the first case, you will not be able to fine-tune the network on a Raspberry 
 the device allows (as of third generation hardware), but an ordinary laptop or PC should suffice. In the latter case, you do 
 not have to perform the training yourself, as the fine-tuned model can be downloaded from the AWS key: `s3://lukerm-ds-open/find-tune/data/`.
 
-In both cases, please follow these instructions to get set up (bearing in mind that some of the python requirements need special attention
-for the Raspberry Pi):
+In both cases, please follow these instructions to get set up, bearing in mind that some of the python requirements need special attention
+for the Raspberry Pi:
 
 * `git clone git@github.com:lukerm/find-tune ~/find-tune/` 
 * `cd ~/find-tune/`
