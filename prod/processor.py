@@ -1,12 +1,23 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Dec  9 15:18:47 2018
+# Copyright (C) 2017 DataArt
+# Modifications copyright (C) 2018 lukerm
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# This file has been (extensively) modified by lukerm (2018). View the original file at:
+#     https://github.com/devicehive/devicehive-audio-analysis/blob/master/audio/processor.py
 
-@author: luke
-"""
 
-## This script processes incoming sound data and classifies it using our tuned VGGish network. It is (heavily) adapted  ##
-## from: https://github.com/devicehive/devicehive-audio-analysis/blob/master/audio/processor.py                         ##
+## This script processes incoming sound data and classifies it using our tuned VGGish network ##
 
 
 ## Imports ##
@@ -19,6 +30,8 @@ from keras.models import model_from_json
 import vggish_input
 import vggish_params as params
 
+from definitions import DATA_DIR
+
 
 ## Constants ##
 
@@ -27,7 +40,7 @@ P_THRESH = 0.9
 
 __all__ = ['WavProcessor', 'format_predictions']
 
-
+# TODO: mark for removal
 cwd = os.path.dirname(os.path.realpath(__file__))
 
 
@@ -43,7 +56,7 @@ class WavProcessor(object):
 
     _tuned_vggish = None
 
-    def __init__(self, data_dir=os.path.join(os.path.expanduser('~'), 'find-tune', 'data')):
+    def __init__(self, data_dir=DATA_DIR):
         # TODO: fix path
 
         with open(os.path.join(data_dir, 'my_vggish_network.json'), 'r') as j:

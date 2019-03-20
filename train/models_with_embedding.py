@@ -1,9 +1,16 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Dec  4 20:20:37 2018
-
-@author: luke
-"""
+#  Copyright (C) 2018 lukerm
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
 
 ## Imports ##
 
@@ -13,7 +20,7 @@ import numpy as np
 np.random.seed(2018)
 
 import sys
-sys.path.append(os.path.join(os.path.expanduser('~'), 'find-tune', 'train')) # TODO: do this during setup
+sys.path.append(os.path.join(os.path.expanduser('~'), 'find-tune', 'train'))
 import perf_utils as pu
 
 from imblearn.over_sampling import SMOTE
@@ -28,16 +35,19 @@ from keras.models import Model, load_model
 from keras.optimizers import Adam
 from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
 
-
-## Constants ##
-
-DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
+from definitions import DATA_DIR
 
 
 ## Main ##
 print('=== Preparing data ===')
 
 # Load data from file
+# X = embedding features (output from VGGish model)
+# y = binary target variable (1 = target track, 0 = other sound)
+# c = sound categories (e.g. 'Jingle Bells', 'target')
+# s = seconds in the original YouTube track where this clip begins
+# ids = YouTube unique identifiers for the track
+# L = log-mel attributes (input to VGGish model)
 data = np.load(os.path.join(DATA_DIR, 'embedding_data.npz'))
 X, y, c, s, ids, L = data['X'], data['y'], data['c'], data['s'], data['i'], data['L']
 
@@ -103,7 +113,6 @@ print('=== Linear classifier ===')
 print()
 # Yields accuracy and perfect recall on positive class
 # Suffers from imperfect precision on positive class (gives false positives)
-# TODO: investigate changing balance between precision / recall by tweaking classification threshold
 
 # Fit multiple classifiers with increasing regularization strength
 # Print a report card for each model
@@ -192,7 +201,7 @@ lr0 = 0.01
 h1  = 128
 bsz = 64
 
-model, history, _ = fit_nn_model(lr0, h1, bsz, verbose=1)
+model, history, _ = fit_nn_model(lr0, h1, bsz, verbose=0)
 
 # Make (probability) predictions
 y_pred_tr_bal = model.predict(X_tr_bal)[:, 0]
@@ -208,7 +217,7 @@ pu.print_scorecard(y_va, y_pred_va > p_thresh, title='VALIDATION')
 # More rigorous test: use cross-validation, 5-folds
 # Again, perfect scorecards for each fold - shuffling is important for diversity of training data!
 print('\n')
-print('=== Neural network classifier (5-fold CV) ===')
+print('=== 5-fold CV ===')
 print()
 histories = []
 fold_cntr = 0
@@ -234,7 +243,9 @@ for i_tr, i_va in skf.split(X, y):
     ids_va = ids[i_va]
     L_va = L[i_va, :, :]
 
-    print('Fold %d' % fold_cntr)
+    print('FOLD %d' % fold_cntr)
+    print('======')
+    print()
     print('Positive labels in training set:   %d' % y_tr.sum())
     print('Positive labels in validation set: %d' % y_va.sum())
 
@@ -242,6 +253,15 @@ for i_tr, i_va in skf.split(X, y):
     sm = SMOTE(random_state=2018)
     X_tr_bal, y_tr_bal = sm.fit_sample(X_tr, y_tr)
     print('Positive labels in balanced set:   %d' % y_tr_bal.sum())
+
+    print()
+    print('=== Linear classifier ===')
+    alpha = 1e-4
+    lr = LogisticRegression(C=1/alpha, solver='liblinear')
+    lr.fit(X_tr_bal, y_tr_bal)
+    y_pred_va = lr.predict(X_va)
+    pu.print_scorecard(y_va, y_pred_va, title='VALIDATION')
+    pu.print_negatives(y_va, y_pred_va > p_thresh, c_va, ytids=ids_va, num_secs=s_va)
 
     # Centre and scale the features
     ss = StandardScaler()
@@ -262,6 +282,8 @@ for i_tr, i_va in skf.split(X, y):
     histories.append(history)
 
     # Load the best model and predict
+    print()
+    print('=== Dense neural network ===')
     model = load_model(save_path)
     y_pred_va = model.predict(X_va)[:, 0]
     pu.print_scorecard(y_va, y_pred_va > p_thresh, title='VALIDATION')

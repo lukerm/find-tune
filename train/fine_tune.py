@@ -1,9 +1,16 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Dec  8 21:32:49 2018
-
-@author: luke
-"""
+#  Copyright (C) 2018 lukerm
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
 
 ## Imports ##
 
@@ -18,17 +25,16 @@ from keras.models import Sequential, load_model
 from keras import layers as lyr
 from keras.optimizers import SGD
 
+from definitions import ROOT_DIR, DATA_DIR, VGGISH_DIR
+
 import sys
-sys.path.append(os.path.join(os.path.expanduser('~'), 'find-tune', 'train')) # TODO: do this during setup
+sys.path.append(os.path.join(ROOT_DIR, 'train'))
 import perf_utils as pu
 
 
 ## Constants ##
 
-VGGISH_DIR = os.path.join(os.path.expanduser('~'), 'tf-models','research','audioset') # TODO: at setup
 checkpoint_path = os.path.join(VGGISH_DIR, 'vggish_model.ckpt')
-
-DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
 
 # The fold to concentrate on: see models_with_embedding.py
 FOLD_NUM = 0
@@ -168,7 +174,7 @@ history = vggish.fit(L_tr, y_tr,
                       epochs=1, batch_size=64,
                       validation_data=(L_va, y_va),
                       class_weight=c_wts,
-                      verbose=1,
+                      verbose=2,
                     )
 
 # Predictions after
@@ -192,6 +198,10 @@ pu.print_scorecard(y_va, y_pred_aft_va > 0.5, title='VALIDATION')
 pu.print_negatives(y_va, y_pred_aft_va > 0.5, c_va, ytids=ids_va, num_secs=s_va)
 
 
+print()
+print('Effect of thresholding probability')
+print()
+
 # We do not see much difference in prediction capabilities after "fine-tuning", so it
 # must be well-trained already. This is despite implicit hyperparameter search on learning
 # rate, batch size, etc.
@@ -207,6 +217,8 @@ print(y_pred_tr[np.where((y_tr==0) & (y_pred_tr > 0.5))[0]])
 print(y_pred_va[np.where((y_va==0) & (y_pred_va > 0.5))[0]])
 
 # On this evidence, 0.9 is a very reasonable threshold to achieve the best performance!
+print('Use threshold: %.2f' % 0.9)
+print()
 pu.print_scorecard(y_tr, y_pred_tr > 0.9, title='TRAIN')
 pu.print_negatives(y_tr, y_pred_tr > 0.9, c_tr, ytids=ids_tr, num_secs=s_tr)
 
@@ -215,8 +227,12 @@ pu.print_negatives(y_va, y_pred_va > 0.9, c_va, ytids=ids_va, num_secs=s_va)
 
 
 # Save the created model
+print()
+print('Saving model ...')
 vggish.save_weights(os.path.join(DATA_DIR, 'my_vggish_network.h5')) # Weights a HDF5
 model_dict = json.loads(vggish.to_json()) # Architecture as JSON
 with open(os.path.join(DATA_DIR, 'my_vggish_network.json'), 'w') as j:
     json.dump(model_dict, j)
+
+print('done')
 

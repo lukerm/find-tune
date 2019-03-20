@@ -1,3 +1,17 @@
+#  Copyright (C) 2018 lukerm
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 ## Binary classification: target track (1) or other music / noise (0) ##
 
 
@@ -14,17 +28,16 @@ import vggish_slim
 
 import numpy as np
 
+from definitions import DATA_DIR, VGGISH_DIR
+
 
 ## Constants ##
 
 # Paths to downloaded VGGish files
-# TODO: fix path
-VGGISH_DIR= os.path.join(os.path.expanduser('~'), 'tf-models','research','audioset')
 checkpoint_path = os.path.join(VGGISH_DIR, 'vggish_model.ckpt')
 pca_params_path = os.path.join(VGGISH_DIR, 'vggish_pca_params.npz')
 
-# Paths to data files
-DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
+# Paths to YouTube sound data files
 YT8M_DIR = os.path.join(DATA_DIR, 'youtube_clip')
 
 

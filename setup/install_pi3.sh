@@ -1,15 +1,30 @@
-# Logging steps I found when installing on Raspberry Pi 3 (Raspian Stretch)
+#  Copyright (C) 2018 lukerm
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+# Here I log steps I found when installing on Raspberry Pi 3 (Raspian Stretch)
 
 # Set up microphone
 # https://iotbytes.wordpress.com/connect-configure-and-test-usb-microphone-and-speaker-with-raspberry-pi/
 # Please check configuration before copying blindly
 arecord -l
+# If the microphone is too quiet, this guide might help:
+# http://wiki.sunfounder.cc/index.php?title=To_use_USB_mini_microphone_on_Raspbian
 
-sudo apt-get install libportaudio2 portaudio19-dev
-sudo apt-get install libatlas-base-dev
+sudo apt install libatlas-base-dev
 
-sudo apt-get install cmake
-sudo apt-get install libedit-dev
+sudo apt install cmake
+sudo apt install libedit-dev
 
 # Install llvmlite from source (it's a bit painful, but steps mapped out below)
 # Using install guide: https://llvmlite.readthedocs.io/en/latest/admin-guide/install.html

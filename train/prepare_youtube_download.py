@@ -1,16 +1,31 @@
+#  Copyright (C) 2018 lukerm
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
 ## Imports ##
 
 import os
 import re
 import json
 
+from definitions import DATA_DIR
 
-## Constants ## 
+
+## Constants ##
 
 # Take more than one per category, just in case it fails
 N_TRACKS_PER_CAT = 2
 
-DATA_DIR = os.path.join(os.path.expanduser('~'), 'find-tune', 'data')
 
 ## Functions ##
 
@@ -52,7 +67,7 @@ with open(os.path.join(DATA_DIR, 'non-target_categories.txt'), 'r') as f:
 link_details = {}
 n_cats  = 0
 n_links = 0
-link_fname = 'data/dl_youtube_links.txt'
+link_fname = os.path.join(DATA_DIR, 'dl_youtube_links.txt')
 with open(link_fname, 'w') as f: 
     print('Saving links to: %s' % link_fname)
     for cat in sound_cats:

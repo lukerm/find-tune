@@ -1,8 +1,19 @@
-# This bash script walks through the steps required to prepare the audio features (from VGGish model)
-# from the sound bites downloaded from YouTube. Please ensure install_youtube-dl.sh has been executed.
+#  Copyright (C) 2018 lukerm
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
 
-# Please also ensure ffmpeg is installed, as it is used later. To do so (not run):
-# sudo apt-get install ffmpeg
+# This bash script walks through the steps required to prepare the audio features (from VGGish model)
+# from the sound bites downloaded from YouTube. Please ensure setup/install_youtube-dl.sh has been executed.
 
 # Prepare the list of audio files to download from YouTube
 # Output files: data/dl_youtube_links.txt data/link_details.json
