@@ -58,6 +58,9 @@ class Capture(object):
             if not os.path.isdir(path):
                 raise FileNotFoundError('"{}" isn\'t a directory'.format(path))
 
+        # Ensure weights loaded before anything else happens
+        self._processor = WavProcessor()
+        logger.info("Network model's weights loaded")
         self._save_path = path
         self._ask_data = threading.Event()
         self._captor = Captor(min_time, max_time, self._ask_data, self._process)
@@ -72,7 +75,7 @@ class Capture(object):
         self._process_buf = np.frombuffer(data, dtype=np.int16)
 
     def _process_loop(self):
-        with WavProcessor() as proc:
+        with self._processor as proc:
             self._ask_data.set()
             while True:
                 if self._process_buf is None:
