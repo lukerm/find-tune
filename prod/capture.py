@@ -91,11 +91,8 @@ class Capture(object):
                     wavfile.write(f_path, self._sample_rate, self._process_buf)
                     logger.info('"{}" saved.'.format(f_path))
 
-                logger.info('Start processing.')
-                predictions = proc.get_predictions(self._sample_rate, self._process_buf)
-                logger.info('Predictions: {}'.format(format_predictions(predictions)))
-
-                logger.info('Stop processing.')
+                preds = proc.get_predictions(self._sample_rate, self._process_buf)
+                logger.info('Target detected: %.0f%% (%d/%d)' % ((100 * preds.mean()), sum(preds), len(preds)))
                 self._process_buf = None
                 self._ask_data.set()
 
