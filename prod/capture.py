@@ -23,13 +23,14 @@ import time
 import os
 import numpy as np
 
+from datetime import date
 from scipy.io import wavfile
 from log_config import LOGGING
 
 from prod.captor import Captor
 from prod.processor import WavProcessor, format_predictions
 
-from definitions import DATA_DIR
+from definitions import JUKEBOX_DIR, JUKEBOX_CNF
 
 
 parser = argparse.ArgumentParser(description='Capture and process audio')
@@ -96,10 +97,16 @@ class Capture(object):
                 preds = proc.get_predictions(self._sample_rate, self._process_buf)
                 logger.info('Target detected: %.0f%% (%d/%d)' % ((100 * preds.mean()), sum(preds), len(preds)))
                 if preds.mean() > 0.25:
-                    logger.info('Sounding doorbell')
-                    os.system('paplay %s' % os.path.join(DATA_DIR, 'target_tune.wav'))
+                    track_to_play = self.find_playback_track()
+                    logger.info('Sounding doorbell: %s' % track_to_play)
+                    os.system('paplay %s' % os.path.join(JUKEBOX_DIR, track_to_play))
                 self._process_buf = None
                 self._ask_data.set()
+
+    def find_playback_track(self):
+        today = date.today().strftime('%m-%d')
+        track = JUKEBOX_CNF['easter_eggs'].get(today, JUKEBOX_CNF['default'])
+        return track
 
 
 if __name__ == '__main__':
