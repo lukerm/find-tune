@@ -29,6 +29,8 @@ from log_config import LOGGING
 from prod.captor import Captor
 from prod.processor import WavProcessor, format_predictions
 
+from definitions import DATA_DIR
+
 
 parser = argparse.ArgumentParser(description='Capture and process audio')
 parser.add_argument('--min_time', type=float, default=5, metavar='SECONDS',
@@ -93,6 +95,9 @@ class Capture(object):
 
                 preds = proc.get_predictions(self._sample_rate, self._process_buf)
                 logger.info('Target detected: %.0f%% (%d/%d)' % ((100 * preds.mean()), sum(preds), len(preds)))
+                if preds.mean() > 0.25:
+                    logger.info('Sounding doorbell')
+                    os.system('paplay %s' % os.path.join(DATA_DIR, 'target_tune.wav'))
                 self._process_buf = None
                 self._ask_data.set()
 
