@@ -25,7 +25,8 @@ JUKEBOX_DIR = os.path.join(DATA_DIR, 'jukebox')
 JUKEBOX_CNF = {
     'default': 'target_tune.wav',
     'easter_eggs': {
-         '01-01': 'target_tune.wav',
+         '12-24': 'jingle_bell_rock.wav',
+         '12-25': 'jingle_bell_rock.wav',
     }
 }
 
