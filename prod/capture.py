@@ -79,6 +79,8 @@ class Capture(object):
 
     def _process_loop(self):
         with self._processor as proc:
+            # Confirm that the system is ready with a ding
+            os.system('paplay %s' % os.path.join(JUKEBOX_DIR, 'ding.wav'))
             self._ask_data.set()
             while True:
                 if self._process_buf is None:
