@@ -21,6 +21,7 @@ PROFILE=$(pactl list sinks | grep -i 'bluetooth.protocol' | sed -E 's/.*"([a-z0-
 if [[ $BT_DEV_MAC == $TARGET_MAC ]] && [[ $PROFILE == "a2dp_sink" ]]
 then
   echo "connected"
+  pacmd set-default-sink bluez_sink.$(echo $BT_DEV_MAC | sed 's/:/_/g').$PROFILE
 else
   echo "reconnecting ..."
   sudo systemctl disable bluetooth.service
@@ -30,4 +31,9 @@ else
   sudo systemctl start bluetooth.service
   sleep 5
   echo  "connect $TARGET_MAC" | bluetoothctl
+  sleep 20
+  pacmd set-default-sink bluez_sink.$(echo $BT_DEV_MAC | sed 's/:/_/g').$PROFILE
+  sleep 2
+  # Confirm connection successful
+  /usr/bin/paplay ~/find-tune/data/jukebox/ding.wav
 fi
