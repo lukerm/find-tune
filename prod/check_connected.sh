@@ -33,7 +33,4 @@ else
   echo  "connect $TARGET_MAC" | bluetoothctl
   sleep 20
   pacmd set-default-sink bluez_sink.$(echo $BT_DEV_MAC | sed 's/:/_/g').$PROFILE
-  sleep 2
-  # Confirm connection successful
-  /usr/bin/paplay ~/find-tune/data/jukebox/ding.wav
 fi
