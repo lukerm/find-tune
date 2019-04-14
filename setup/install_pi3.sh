@@ -51,3 +51,18 @@ sudo python3 setup.py build
 python3 runtests.py
 pip3 install --upgrade .
 
+
+
+## Pulse Audio
+#source: https://raspberrypi.stackexchange.com/questions/639/how-to-get-pulseaudio-running
+
+sudo apt update
+sudo apt install pulseaudio pulseaudio-module-zeroconf alsa-utils avahi-daemon pulseaudio-module-bluetooth
+sudo modprobe snd-bcm2835                      # load module for single boot
+echo "snd-bcm2835" | sudo tee -a /etc/modules  # load module for persistance
+
+# Uncomment/amend these lines in /etc/pulse/default.pa
+#load-module module-native-protocol-tcp auth-ip-acl=127.0.0.1;192.168.0.0/16
+#load-module module-zeroconf-publish
+
+# Another useful read: https://raspberrypi.stackexchange.com/questions/73706/how-can-i-select-the-audio-output-to-be-a-known-bluetooth-device-headless
