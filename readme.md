@@ -10,7 +10,7 @@ doorbell amplifier.
 The track that I'm interested in classifying is committed into this repository in `data/target_tune.wav`. However, there's no reason
 you couldn't adapt this to other target tracks that may interest you. To do this, you'd have to train your own model in order to get it
 to classify that tune or sound. Going further, this code could be tweaked to create a homemade baby monitor, where the target sound 
-would be crying. However, I would recommend _extensive_ testing before deploying on your child!
+would be crying (_extensive_ testing would be required before deploying on a child!).
 
 
 ## How it works
@@ -65,12 +65,24 @@ Once you have completed the installation instructions, either for your laptop or
 Please ensure that your (USB) microphone is turned up. As a first step, you can run `prod/test_load_model.py` to check that the 
 TensorFlow model loads correctly through the Keras interface. 
 
-On a Raspberry Pi, this will fail if you do not have enough swap memory allocated (1GB should be sufficient when 
-[resizing the swap](https://www.bitpi.co/2015/02/11/how-to-change-raspberry-pis-swapfile-size-on-rasbian/)). 
+On a Raspberry Pi, this will fail if you do not have enough swap memory allocated (1GB should be sufficient when
+[resizing the swap](https://www.bitpi.co/2015/02/11/how-to-change-raspberry-pis-swapfile-size-on-rasbian/)).
 This is because loading the model's weights is a very memory-intensive process requiring more than the 1GB of RAM available
 on the third-generation device. Even then, it will take several minutes to load the model, and will appear frozen during
-that time, but patience will prevail! Once it has everything loaded you will get a message and the program will exit. 
+that time, but patience will prevail! Once it has everything loaded you will get a message and the program will exit.
 
-After that, I recommend moving onto the `prod/capture.py` file which loads the model before capturing, processing and 
+After that, I recommend moving onto the `prod/capture.py` file which loads the model before capturing, processing and
 classifying the sound coming through the microphone. It will do that in chunks of about five seconds (configurable), printing its
-predictions to the terminal - please have the target track ready to play in order to check it's working correctly!
+predictions to the terminal. In addition, if it detects the target track with sufficient confidence, then it will play it back
+through the system's main audio output. (This is actually configurable as you can play a different track if you want, or even different songs
+on different days - see `definitions.py` for more details.) PulseAudio's `paplay` is required for this, so please make sure to follow the
+instructions in `setup/install_pi3.sh` (it may already be available on larger Linux distros, such as Ubuntu).
+
+The default audio sink on a Raspberry Pi will not be audible, so you'll have to re-route via Bluetooth. Find the MAC address of the intended
+playback device and place it in `prod/check_connected.sh`, replacing the *'s. Then run that script through to get it to connect (ensure
+the device is on and that it is not paired to any other device). You may have to run it twice. I had a little difficulty getting my bluetooth
+device to switch the high-fidelity "A2DP" mode, and I found that disabling, then re-enabling, the bluetooth service got around this issue,
+which is what `check_connected.sh` attempts to do. If that script doesn't work for you, try first establishing the connection manually
+using [`bluetoothctl`](https://docs.ubuntu.com/core/en/stacks/bluetooth/bluez/docs/reference/pairing/outbound.html).
+
+You can make this fully automated from boot by copying the lines of `prod/crontab` into your Pi's main `crontab` file.
