@@ -81,7 +81,7 @@ instructions in `setup/install_pi3.sh` (it may already be available on larger Li
 The default audio sink on a Raspberry Pi will not be audible, so you'll have to re-route via Bluetooth. Find the MAC address of the intended
 playback device and place it in `prod/check_connected.sh`, replacing the *'s. Then run that script through to get it to connect (ensure
 the device is on and that it is not paired to any other device). You may have to run it twice. I had a little difficulty getting my bluetooth
-device to switch the high-fidelity "A2DP" mode, and I found that disabling, then re-enabling, the bluetooth service got around this issue,
+device to switch to the high-fidelity "A2DP" mode, and I found that disabling, then re-enabling, the bluetooth service got around this issue,
 which is what `check_connected.sh` attempts to do. If that script doesn't work for you, try first establishing the connection manually
 using [`bluetoothctl`](https://docs.ubuntu.com/core/en/stacks/bluetooth/bluez/docs/reference/pairing/outbound.html).
 
