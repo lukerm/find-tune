@@ -1,7 +1,8 @@
 ## crontab designed to make project run on a Raspberry Pi automatically from boot (pulseaudio must be installed) ##
 
-# Connect to target device via bluetooth (plays short sound when done)
-@reboot sleep 60  && export PULSE_RUNTIME_PATH="/run/user/$(id -u)/pulse/" && ~/find-tune/prod/check_connected.sh
+# Connect to target device via bluetooth (check connection every two minutes)
+*/2 * * * * export PULSE_RUNTIME_PATH="/run/user/$(id -u)/pulse/" && ~/find-tune/prod/check_connected.sh
 # Run the main program to capture and classify sound (plays short sound when ready)
 # Note: this uses python from a virtual environment (may not be appropriate for other users)
-@reboot sleep 120 && export PULSE_RUNTIME_PATH="/run/user/$(id -u)/pulse/" && cd ~/find-tune/prod/ && PYTHONPATH=..:~/tf-models/research/audioset/ ~/venv/bin/python3 capture.py
+# Note: allow a few minutes at the beginning to establish the bluetooth connection with the target device
+@reboot sleep 180 && export PULSE_RUNTIME_PATH="/run/user/$(id -u)/pulse/" && cd ~/find-tune/prod/ && PYTHONPATH=..:~/tf-models/research/audioset/ ~/venv/bin/python3 capture.py
