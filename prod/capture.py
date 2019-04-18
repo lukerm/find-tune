@@ -17,7 +17,6 @@
 #     https://github.com/devicehive/devicehive-audio-analysis/blob/master/capture.py
 
 import argparse
-import logging.config
 import threading
 import time
 import os
@@ -25,12 +24,14 @@ import numpy as np
 
 from datetime import date
 from scipy.io import wavfile
+
+import logging.config
 from log_config import LOGGING
 
 from prod.captor import Captor
 from prod.processor import WavProcessor, format_predictions
 
-from definitions import JUKEBOX_DIR, JUKEBOX_CNF
+from definitions import ROOT_DIR, JUKEBOX_DIR, JUKEBOX_CNF
 
 
 parser = argparse.ArgumentParser(description='Capture and process audio')
@@ -42,7 +43,7 @@ parser.add_argument('-s', '--save_path', type=str, metavar='PATH',
                     help='Save captured audio samples to provided path',
                     dest='path')
 
-
+os.makedirs(os.path.join(ROOT_DIR, 'prod', 'logs'), exist_ok=True)
 logging.config.dictConfig(LOGGING)
 logger = logging.getLogger('audio_analysis.capture')
 
