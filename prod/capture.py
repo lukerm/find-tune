@@ -83,27 +83,31 @@ class Capture(object):
             os.system('paplay %s' % os.path.join(JUKEBOX_DIR, 'ding.wav'))
             self._ask_data.set()
             while True:
-                if self._process_buf is None:
-                    # Waiting for data to process
-                    time.sleep(self._processor_sleep_time)
-                    continue
+                try:
+                    if self._process_buf is None:
+                        # Waiting for data to process
+                        time.sleep(self._processor_sleep_time)
+                        continue
 
-                self._ask_data.clear()
-                if self._save_path:
-                    f_path = os.path.join(
-                        self._save_path, 'record_{:.0f}.wav'.format(time.time())
-                    )
-                    wavfile.write(f_path, self._sample_rate, self._process_buf)
-                    logger.info('"{}" saved.'.format(f_path))
+                    self._ask_data.clear()
+                    if self._save_path:
+                        f_path = os.path.join(
+                            self._save_path, 'record_{:.0f}.wav'.format(time.time())
+                        )
+                        wavfile.write(f_path, self._sample_rate, self._process_buf)
+                        logger.info('"{}" saved.'.format(f_path))
 
-                preds = proc.get_predictions(self._sample_rate, self._process_buf)
-                logger.info('Target detected: %.0f%% (%d/%d)' % ((100 * preds.mean()), sum(preds), len(preds)))
-                if preds.mean() > 0.25:
-                    track_to_play = self.find_playback_track()
-                    logger.info('Sounding doorbell: %s' % track_to_play)
-                    os.system('paplay %s' % os.path.join(JUKEBOX_DIR, track_to_play))
-                self._process_buf = None
-                self._ask_data.set()
+                    preds = proc.get_predictions(self._sample_rate, self._process_buf)
+                    logger.info('Target detected: %.0f%% (%d/%d)' % ((100 * preds.mean()), sum(preds), len(preds)))
+                    if preds.mean() > 0.25:
+                        track_to_play = self.find_playback_track()
+                        logger.info('Sounding doorbell: %s' % track_to_play)
+                        os.system('paplay %s' % os.path.join(JUKEBOX_DIR, track_to_play))
+                    self._process_buf = None
+                    self._ask_data.set()
+
+                except Exception:
+                    logger.exception('Fatal error in _process_loop')
 
     def find_playback_track(self):
         today = date.today().strftime('%m-%d')
