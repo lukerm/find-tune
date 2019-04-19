@@ -17,7 +17,6 @@
 #     https://github.com/devicehive/devicehive-audio-analysis/blob/master/capture.py
 
 import argparse
-import logging.config
 import threading
 import time
 import os
@@ -25,12 +24,14 @@ import numpy as np
 
 from datetime import date
 from scipy.io import wavfile
+
+import logging.config
 from log_config import LOGGING
 
 from prod.captor import Captor
 from prod.processor import WavProcessor, format_predictions
 
-from definitions import JUKEBOX_DIR, JUKEBOX_CNF
+from definitions import ROOT_DIR, JUKEBOX_DIR, JUKEBOX_CNF
 
 
 parser = argparse.ArgumentParser(description='Capture and process audio')
@@ -42,7 +43,7 @@ parser.add_argument('-s', '--save_path', type=str, metavar='PATH',
                     help='Save captured audio samples to provided path',
                     dest='path')
 
-
+os.makedirs(os.path.join(ROOT_DIR, 'prod', 'logs'), exist_ok=True)
 logging.config.dictConfig(LOGGING)
 logger = logging.getLogger('audio_analysis.capture')
 
@@ -83,27 +84,31 @@ class Capture(object):
             os.system('paplay %s' % os.path.join(JUKEBOX_DIR, 'ding.wav'))
             self._ask_data.set()
             while True:
-                if self._process_buf is None:
-                    # Waiting for data to process
-                    time.sleep(self._processor_sleep_time)
-                    continue
+                try:
+                    if self._process_buf is None:
+                        # Waiting for data to process
+                        time.sleep(self._processor_sleep_time)
+                        continue
 
-                self._ask_data.clear()
-                if self._save_path:
-                    f_path = os.path.join(
-                        self._save_path, 'record_{:.0f}.wav'.format(time.time())
-                    )
-                    wavfile.write(f_path, self._sample_rate, self._process_buf)
-                    logger.info('"{}" saved.'.format(f_path))
+                    self._ask_data.clear()
+                    if self._save_path:
+                        f_path = os.path.join(
+                            self._save_path, 'record_{:.0f}.wav'.format(time.time())
+                        )
+                        wavfile.write(f_path, self._sample_rate, self._process_buf)
+                        logger.info('"{}" saved.'.format(f_path))
 
-                preds = proc.get_predictions(self._sample_rate, self._process_buf)
-                logger.info('Target detected: %.0f%% (%d/%d)' % ((100 * preds.mean()), sum(preds), len(preds)))
-                if preds.mean() > 0.25:
-                    track_to_play = self.find_playback_track()
-                    logger.info('Sounding doorbell: %s' % track_to_play)
-                    os.system('paplay %s' % os.path.join(JUKEBOX_DIR, track_to_play))
-                self._process_buf = None
-                self._ask_data.set()
+                    preds = proc.get_predictions(self._sample_rate, self._process_buf)
+                    logger.info('Target detected: %.0f%% (%d/%d)' % ((100 * preds.mean()), sum(preds), len(preds)))
+                    if preds.mean() > 0.25:
+                        track_to_play = self.find_playback_track()
+                        logger.info('Sounding doorbell: %s' % track_to_play)
+                        os.system('paplay %s' % os.path.join(JUKEBOX_DIR, track_to_play))
+                    self._process_buf = None
+                    self._ask_data.set()
+
+                except Exception:
+                    logger.exception('Fatal error in _process_loop')
 
     def find_playback_track(self):
         today = date.today().strftime('%m-%d')

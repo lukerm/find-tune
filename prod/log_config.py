@@ -29,10 +29,19 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'formatter': 'simple',
+            'filename': 'logs/capture.log',
+            'when': 'D',
+            'interval': 1,
+            'backupCount': 31,
+        }
     },
     'loggers': {
         'audio_analysis': {
-            'handlers': ['console'],
+            'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False
         },
