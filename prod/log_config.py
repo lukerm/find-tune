@@ -34,7 +34,7 @@ LOGGING = {
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'formatter': 'simple',
             'filename': 'logs/capture.log',
-            'when': 'H', # TODO: change to days (D)
+            'when': 'D',
             'interval': 1,
             'backupCount': 31,
         }
