@@ -40,9 +40,6 @@ P_THRESH = 0.9
 
 __all__ = ['WavProcessor', 'format_predictions']
 
-# TODO: mark for removal
-cwd = os.path.dirname(os.path.realpath(__file__))
-
 
 ## Functions ##
 
@@ -57,7 +54,6 @@ class WavProcessor(object):
     _tuned_vggish = None
 
     def __init__(self, data_dir=DATA_DIR):
-        # TODO: fix path
 
         with open(os.path.join(data_dir, 'my_vggish_network.json'), 'r') as j:
             model_dict = json.load(j)
