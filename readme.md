@@ -85,4 +85,10 @@ device to switch to the high-fidelity "A2DP" mode, and I found that disabling, t
 which is what `check_connected.sh` attempts to do. If that script doesn't work for you, try first establishing the connection manually
 using [`bluetoothctl`](https://docs.ubuntu.com/core/en/stacks/bluetooth/bluez/docs/reference/pairing/outbound.html).
 
+On a Raspberry Pi, you will find that the program that makes predictions takes significantly longer than on an ordinary PC. The resampling operation
+when preprocessing the audio data is responsible for this. You can speed up this by an order of magnitude by changing a single line in Tensorflow's
+`models` repo. Go to `~/tf-models/research/audioset/vggish_input.py` and, on the line that calls `resampy.resample`, add the argument `filter='kaiser_fast'`
+to this function call. This will slightly reduce the quality of resampling (compared to `kaiser_best`, the default), but predictions are not affected
+and the speed up is very good.
+
 You can make this fully automated from boot by copying the lines of `prod/crontab` into your Pi's main `crontab` file.
