@@ -18,12 +18,12 @@ DATA_DIR = os.path.join(ROOT_DIR, 'data')
 
 # Specify the directory to look for playback songs
 JUKEBOX_DIR = os.path.join(DATA_DIR, 'jukebox')
-# Specify the default song, which can be overridden by an "easter egg",
+# Specify the default song(s), which can be overridden by an "easter egg",
 # indexed by date strings with format MM-DD. A trivial example is shown
 # below (for more exciting example, replace it by a different wav file in
 # the JUKEBOX_DIR)
 JUKEBOX_CNF = {
-    'default': 'target_tune.wav',
+    'defaults': ['target_tune.wav',],
     'easter_eggs': {
          '12-24': 'jingle_bell_rock.wav',
          '12-25': 'jingle_bell_rock.wav',

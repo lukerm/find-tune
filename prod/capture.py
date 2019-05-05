@@ -20,6 +20,7 @@ import argparse
 import threading
 import time
 import os
+import random
 import numpy as np
 
 from datetime import date
@@ -111,8 +112,9 @@ class Capture(object):
                     logger.exception('Fatal error in _process_loop')
 
     def find_playback_track(self):
+        # Attempt to access the Easter egg for this day, otherwise choose one of the default tracks at random
         today = date.today().strftime('%m-%d')
-        track = JUKEBOX_CNF['easter_eggs'].get(today, JUKEBOX_CNF['default'])
+        track = JUKEBOX_CNF['easter_eggs'].get(today, random.choice(JUKEBOX_CNF['defaults']))
         return track
 
 
