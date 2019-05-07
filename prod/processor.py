@@ -27,6 +27,8 @@ import json
 import numpy as np
 from keras.models import model_from_json
 
+from datetime import datetime
+
 import vggish_input
 import vggish_params as params
 
@@ -62,14 +64,23 @@ class WavProcessor(object):
 
         self._tuned_vggish = vggish
 
-    def get_predictions(self, sample_rate, data):
+    def get_predictions(self, sample_rate, data, verbose=False):
         # Convert to [-1.0, +1.0]
         # See: wavfile_to_examples at https://github.com/tensorflow/models/blob/master/research/audioset/vggish_input.py
         samples = data / 32768.0
+
+        t0 = datetime.now()
         # Convert to log-mel matrices for each sampled second (3D tensor)
         logmels = vggish_input.waveform_to_examples(samples, sample_rate)
+        t1 = datetime.now()
         # Extract predictions from the network (input must be 4D => increase dimension by 1)
         predictions = self._tuned_vggish.predict(logmels[:,:,:,None])[:, 0]
+        t2 = datetime.now()
+
+        if verbose:
+            print('shape of data: %s' % str(logmels.shape))
+            print('preprocessing: %.3f seconds' % ((t1 - t0).total_seconds()))
+            print('NN prediction: %.3f seconds' % ((t2 - t1).total_seconds()))
 
         return predictions > P_THRESH
 

@@ -43,6 +43,8 @@ parser.add_argument('--max_time', type=float, default=7, metavar='SECONDS',
 parser.add_argument('-s', '--save_path', type=str, metavar='PATH',
                     help='Save captured audio samples to provided path',
                     dest='path')
+parser.add_argument('--verbose', '-v', action='store_true', default=False,
+                    help='Print out extra timing info')
 
 os.makedirs(os.path.join(ROOT_DIR, 'prod', 'logs'), exist_ok=True)
 logging.config.dictConfig(LOGGING)
@@ -56,7 +58,7 @@ class Capture(object):
     _processor_sleep_time = 0.01
     _process_buf = None
 
-    def __init__(self, min_time, max_time, path=None):
+    def __init__(self, min_time, max_time, path=None, verbose=False):
         if path is not None:
             if not os.path.exists(path):
                 raise FileNotFoundError('"{}" doesn\'t exist'.format(path))
@@ -71,6 +73,8 @@ class Capture(object):
         self._captor = Captor(min_time, max_time, self._ask_data, self._process)
         # Sample rate from the AudioDevice within Captor
         self._sample_rate = self._captor.audio_device.sample_rate
+        # Whether to be verbose
+        self.verbose = verbose
 
     def start(self):
         self._captor.start()
@@ -99,7 +103,7 @@ class Capture(object):
                         wavfile.write(f_path, self._sample_rate, self._process_buf)
                         logger.info('"{}" saved.'.format(f_path))
 
-                    preds = proc.get_predictions(self._sample_rate, self._process_buf)
+                    preds = proc.get_predictions(self._sample_rate, self._process_buf, verbose=self.verbose)
                     logger.info('Target detected: %.0f%% (%d/%d)' % ((100 * preds.mean()), sum(preds), len(preds)))
                     if preds.mean() > 0.25:
                         track_to_play = self.find_playback_track()
