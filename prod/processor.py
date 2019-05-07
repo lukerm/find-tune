@@ -78,9 +78,9 @@ class WavProcessor(object):
         t2 = datetime.now()
 
         if verbose:
-            print(logmels.shape)
-            print('%.3f seconds' % ((t1 - t0).total_seconds()))
-            print('%.3f seconds' % ((t2 - t1).total_seconds()))
+            print('shape of data: %s' % str(logmels.shape))
+            print('preprocessing: %.3f seconds' % ((t1 - t0).total_seconds()))
+            print('NN prediction: %.3f seconds' % ((t2 - t1).total_seconds()))
 
         return predictions > P_THRESH
 
