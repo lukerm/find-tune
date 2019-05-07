@@ -64,7 +64,7 @@ class WavProcessor(object):
 
         self._tuned_vggish = vggish
 
-    def get_predictions(self, sample_rate, data):
+    def get_predictions(self, sample_rate, data, verbose=False):
         # Convert to [-1.0, +1.0]
         # See: wavfile_to_examples at https://github.com/tensorflow/models/blob/master/research/audioset/vggish_input.py
         samples = data / 32768.0
@@ -76,9 +76,12 @@ class WavProcessor(object):
         # Extract predictions from the network (input must be 4D => increase dimension by 1)
         predictions = self._tuned_vggish.predict(logmels[:,:,:,None])[:, 0]
         t2 = datetime.now()
-        print(logmels.shape)
-        print('%.3f seconds' % ((t1 - t0).total_seconds()))
-        print('%.3f seconds' % ((t2 - t1).total_seconds()))
+
+        if verbose:
+            print(logmels.shape)
+            print('%.3f seconds' % ((t1 - t0).total_seconds()))
+            print('%.3f seconds' % ((t2 - t1).total_seconds()))
+
         return predictions > P_THRESH
 
     def __enter__(self):
