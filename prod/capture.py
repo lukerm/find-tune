@@ -35,17 +35,6 @@ from prod.processor import WavProcessor, format_predictions
 from definitions import ROOT_DIR, JUKEBOX_DIR, JUKEBOX_CNF
 
 
-parser = argparse.ArgumentParser(description='Capture and process audio')
-parser.add_argument('--min_time', type=float, default=5, metavar='SECONDS',
-                    help='Minimum capture time')
-parser.add_argument('--max_time', type=float, default=7, metavar='SECONDS',
-                    help='Maximum capture time')
-parser.add_argument('-s', '--save_path', type=str, metavar='PATH',
-                    help='Save captured audio samples to provided path',
-                    dest='path')
-parser.add_argument('--verbose', '-v', action='store_true', default=False,
-                    help='Print out extra timing info')
-
 os.makedirs(os.path.join(ROOT_DIR, 'prod', 'logs'), exist_ok=True)
 logging.config.dictConfig(LOGGING)
 logger = logging.getLogger('audio_analysis.capture')
@@ -123,6 +112,18 @@ class Capture(object):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Capture and process audio')
+    parser.add_argument('--min_time', type=float, default=5, metavar='SECONDS',
+                        help='Minimum capture time')
+    parser.add_argument('--max_time', type=float, default=7, metavar='SECONDS',
+                        help='Maximum capture time')
+    parser.add_argument('-s', '--save_path', type=str, metavar='PATH',
+                        help='Save captured audio samples to provided path',
+                        dest='path')
+    parser.add_argument('-v', '--verbose', action='store_true', default=False,
+                        help='Print out extra timing info')
+
+
     args = parser.parse_args()
     c = Capture(**vars(args))
     c.start()
