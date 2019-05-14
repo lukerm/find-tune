@@ -8,3 +8,5 @@ SHELL=/bin/bash
 # Note: this uses python from a virtual environment (may not be appropriate for other users)
 # Note: allow a few minutes at the beginning to establish the bluetooth connection with the target device
 @reboot sleep 180 && export PULSE_RUNTIME_PATH="/run/user/$(id -u)/pulse/" && cd ~/find-tune/prod/ && PYTHONPATH=..:~/tf-models/research/audioset/ ~/venv/bin/python3 capture.py
+# Set the volume of the microphone to 100% (65536). You may need to change the name of the input source - check which one is used with `pacmd list-sources`
+@reboot sleep 60  && export PULSE_RUNTIME_PATH="/run/user/$(id -u)/pulse/" && pacmd set-source-volume alsa_input.usb-C-Media_Electronics_Inc._USB_PnP_Sound_Device-00.analog-mono 65536
