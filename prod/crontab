@@ -1,5 +1,7 @@
 ## crontab designed to make project run on a Raspberry Pi automatically from boot (pulseaudio must be installed) ##
 
+# Use bash otherwise check_connected.sh won't work
+SHELL=/bin/bash
 # Connect to target device via bluetooth (check connection every two minutes)
 */2 * * * * export PULSE_RUNTIME_PATH="/run/user/$(id -u)/pulse/" && ~/find-tune/prod/check_connected.sh
 # Run the main program to capture and classify sound (plays short sound when ready)
