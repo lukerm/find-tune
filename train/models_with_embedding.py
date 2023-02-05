@@ -48,7 +48,7 @@ print('=== Preparing data ===')
 # s = seconds in the original YouTube track where this clip begins
 # ids = YouTube unique identifiers for the track
 # L = log-mel attributes (input to VGGish model)
-data = np.load(os.path.join(DATA_DIR, 'embedding_data.npz'))
+data = np.load(os.path.join(DATA_DIR, 'embedding_data_augmented.npz'))
 X, y, c, s, ids, L = data['X'], data['y'], data['c'], data['s'], data['i'], data['L']
 
 # Train (80%) / val (20%) split
@@ -225,7 +225,7 @@ skf = StratifiedKFold(5, shuffle=True, random_state=2018)
 for i_tr, i_va in skf.split(X, y):
 
     # Storage for data / models relating to this fold
-    fold_dir = os.path.join(DATA_DIR, 'fold%d' % fold_cntr)
+    fold_dir = os.path.join(DATA_DIR, 'fold%d_aug' % fold_cntr)
     os.makedirs(fold_dir, exist_ok=True)
 
     # Create split datasets

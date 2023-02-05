@@ -57,10 +57,10 @@ class WavProcessor(object):
 
     def __init__(self, data_dir=DATA_DIR):
 
-        with open(os.path.join(data_dir, 'my_vggish_network.json'), 'r') as j:
+        with open(os.path.join(data_dir, 'my_vggish_network_augmented.json'), 'r') as j:
             model_dict = json.load(j)
         vggish = model_from_json(json.dumps(model_dict))
-        vggish.load_weights(os.path.join(data_dir, 'my_vggish_network.h5'))
+        vggish.load_weights(os.path.join(data_dir, 'my_vggish_network_augmented.h5'))
 
         self._tuned_vggish = vggish
 

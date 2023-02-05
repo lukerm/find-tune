@@ -23,10 +23,11 @@ JUKEBOX_DIR = os.path.join(DATA_DIR, 'jukebox')
 # below (for more exciting example, replace it by a different wav file in
 # the JUKEBOX_DIR)
 JUKEBOX_CNF = {
-    'defaults': ['target_tune.wav',],
+    'defaults': ['my_doorbell.wav',],
     'easter_eggs': {
-         '12-24': 'jingle_bell_rock.wav',
-         '12-25': 'jingle_bell_rock.wav',
+         '09-20': 'waltzing_matilda.wav',
+         '12-24': 'in_der_weihnachtsbaeckerei.wav',
+         '12-20': 'jingle_bell_rock.wav',
     }
 }
 

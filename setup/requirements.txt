@@ -8,7 +8,7 @@ soundfile
 seaborn>=0.9.0 # only for notebooks
 scipy
 # For installation of tensorflow on Raspbian, see: https://www.piwheels.org
-tensorflow
+#tensorflow
 keras==2.2.4
 numba>=0.32
 # pip3 install --no-deps resampy # Do manually, after install_pi3.sh

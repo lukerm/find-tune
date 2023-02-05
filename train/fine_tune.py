@@ -37,8 +37,8 @@ import perf_utils as pu
 checkpoint_path = os.path.join(VGGISH_DIR, 'vggish_model.ckpt')
 
 # The fold to concentrate on: see models_with_embedding.py
-FOLD_NUM = 0
-FOLD_DIR = os.path.join(DATA_DIR, 'fold%d' % FOLD_NUM)
+FOLD_NUM = 3
+FOLD_DIR = os.path.join(DATA_DIR, 'fold%d_aug' % FOLD_NUM)
 
 
 ## Main ##
@@ -229,9 +229,9 @@ pu.print_negatives(y_va, y_pred_va > 0.9, c_va, ytids=ids_va, num_secs=s_va)
 # Save the created model
 print()
 print('Saving model ...')
-vggish.save_weights(os.path.join(DATA_DIR, 'my_vggish_network.h5')) # Weights a HDF5
+vggish.save_weights(os.path.join(DATA_DIR, 'my_vggish_network_augmented.h5')) # Weights a HDF5
 model_dict = json.loads(vggish.to_json()) # Architecture as JSON
-with open(os.path.join(DATA_DIR, 'my_vggish_network.json'), 'w') as j:
+with open(os.path.join(DATA_DIR, 'my_vggish_network_augmented.json'), 'w') as j:
     json.dump(model_dict, j)
 
 print('done')

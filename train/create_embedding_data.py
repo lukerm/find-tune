@@ -67,7 +67,7 @@ for cat, urls in link_details.items():
 # Make a record for the target track, too
 ytid_data['target'] = {}
 ytid_data['target']['category'] = 'target'
-ytid_data['target']['log_mel']  = vggish_input.wavfile_to_examples(os.path.join(DATA_DIR, 'target_tune.wav'))
+ytid_data['target']['log_mel']  = vggish_input.wavfile_to_examples(os.path.join(DATA_DIR, 'target_tune_augmented.wav'))
 
 # Embedding features
 with tf.Graph().as_default(), tf.Session() as sess:
@@ -119,6 +119,6 @@ s = np.array(s)
 i = np.array(i)
 
 # Save to data file
-np.savez(os.path.join(DATA_DIR, 'embedding_data.npz'), X=X, y=y, c=c, s=s, i=i, L=L)
-with open(os.path.join(DATA_DIR, 'yt_clips_dict.pkl'), 'wb') as f:
-    pickle.dump(ytid_data, f)
+np.savez(os.path.join(DATA_DIR, 'embedding_data_augmented.npz'), X=X, y=y, c=c, s=s, i=i, L=L)
+#with open(os.path.join(DATA_DIR, 'yt_clips_dict.pkl'), 'wb') as f:
+#    pickle.dump(ytid_data, f)
