@@ -32,6 +32,14 @@ There is a lot of cool mathematics connected to sound classification, which you 
 I also have to tip my hat in the direction of the [project](https://github.com/devicehive/devicehive-audio-analysis) from DeviceHive
 whose code I have adapted for my own production needs (i.e. capturing, processing and classifying sound on the fly). 
 
+To visualize my fine-tuning of this model, we take a look at the t-SNE maps of before and after in the image below. Before adaptation, 
+it looks like it may be difficult to differentiate the between the target tune (red) and glockenspiels or doorbells (yellow / green) - a potential source
+of false positives. Afterwards, the red target has moved significantly away from the pack, meaning that it will be easier to identify 
+and the find-tuning has done it's job. More details of this visualization process can be found in the notebook 
+[`train/visualize_embedding_data.ipynb`](https://github.com/lukerm/find-tune/blob/master/train/visualize_embedding_data.ipynb).
+
+[![Before and After Fine-Tuning](https://github.com/lukerm/find-tune/blob/master/data/image/find-tune-before-after.png)](https://github.com/lukerm/find-tune/blob/master/data/image/find-tune-before-after.png)
+
 
 ## Installation guide
 
@@ -92,3 +100,5 @@ to this function call. This will slightly reduce the quality of resampling (comp
 and the speed up is very good.
 
 You can make this fully automated from boot by copying the lines of `prod/crontab` into your Pi's main `crontab` file.
+
+If you like this project, please hit the ⭐ button!
